@@ -582,6 +582,7 @@ module.exports = {
                 sat,
                 file: filename,
                 commune,
+                feedback : "new",
                 numero,
               }, {new : true})
               .then((response) => {
@@ -599,7 +600,7 @@ module.exports = {
                 codeclient,
                 sector,
                 cell,
-                reference,
+                reference, feedback : "new",
                 sat,
                 commune,
                 numero,

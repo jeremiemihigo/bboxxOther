@@ -36,7 +36,7 @@ const {
   ReadMessage,
   DeleteReclamation,
 } = require("../Controllers/Reclamation");
-const { readPeriodeGroup, demandePourChaquePeriode } = require("../Controllers/Statistique");
+const { readPeriodeGroup, demandePourChaquePeriode, chercherUneDemande } = require("../Controllers/Statistique");
 
 
 var storage = multer.diskStorage({
@@ -127,5 +127,7 @@ router.put("/resetPasswordAgentAdmin", protect, ResetPasswords)
 router.get("/readAgentAdmin", protect, ReadAgentAdmin)
 router.put('/bloquerAgentAdmin', protect, BloquerAgentAdmin)
 router.put("/updateDemande",upload.single("file"), updateDemandeAgent)
+
+router.get("/idDemande/:id", chercherUneDemande)
 
 module.exports = router;
