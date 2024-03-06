@@ -581,6 +581,7 @@ module.exports = {
                 reference,
                 sat,
                 file: filename,
+                feedback : "new",
                 commune,
                 numero,
               }, {new : true})
@@ -600,6 +601,7 @@ module.exports = {
                 sector,
                 cell,
                 reference,
+                feedback : "new",
                 sat,
                 commune,
                 numero,
