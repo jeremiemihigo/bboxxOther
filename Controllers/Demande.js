@@ -581,7 +581,6 @@ module.exports = {
                 reference,
                 sat,
                 file: filename,
-                feedback:"new",
                 commune,
                 feedback : "new",
                 numero,
@@ -604,7 +603,6 @@ module.exports = {
                 reference, feedback : "new",
                 sat,
                 commune,
-                feedback:"new",
                 numero,
               }, {new : true})
               .then((response) => {
