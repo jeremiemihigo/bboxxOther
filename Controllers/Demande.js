@@ -120,7 +120,6 @@ module.exports = {
                 numero,
               })
               .then((demande) => {
-                console.log(demande)
                 if (demande) {
                   done(demande)
                 } else {
@@ -201,7 +200,6 @@ module.exports = {
             })
         },
         function (periode, done) {
-          console.log(periode)
           modelReponse
             .aggregate([
               
@@ -227,7 +225,6 @@ module.exports = {
               { $match : {"demande.lot" : periode.periode} },
             ])
             .then((response) => {
-              console.log(response)
               return res.status(200).json(response)
             })
             .catch(function (err) {
