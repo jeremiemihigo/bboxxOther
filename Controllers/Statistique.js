@@ -2,6 +2,7 @@ const modelDemande = require('../Models/Demande')
 const _ = require('lodash')
 const asyncLab = require('async')
 const { ObjectId } = require('mongodb')
+const modelConversation = require("../Models/Reclamation")
 
 module.exports = {
   readPeriodeGroup: (req, res) => {
@@ -88,7 +89,7 @@ module.exports = {
           }
         ])
         .then((result) => {
-          return res.status(200).json(result)
+          return res.status(200).json(result.reverse())
         })
     } catch (error) {
       console.log(error)
@@ -139,11 +140,25 @@ module.exports = {
               }
             },
           ]).then(response=>{
-            done(response)
+            if(response.length > 0 && response[0].reponse.length > 0){
+              done(null, response)
+            }else{
+              done({demande : response, reponse : []})
+            }
+            
+          })
+        },
+        function(demande, done){
+          modelConversation.find({ code : new ObjectId(demande[0].reponse[0]._id)}).then(result=>{
+            if(result.length > 0){
+              done({demande, reponse : result})
+            }else{
+              done({demande, reponse : []})
+            }
           })
         }
       ], function(result){
-        if(result.length > 0){
+        if(result){
           return res.status(200).json(result)
         }else{
           return res.status(201).json("Code incorrect")

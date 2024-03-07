@@ -201,38 +201,33 @@ module.exports = {
             })
         },
         function (periode, done) {
-          modelDemande
+          console.log(periode)
+          modelReponse
             .aggregate([
-              { $match: { lot: periode.periode } },
+              
               {
                 $lookup: {
-                  from: 'agents',
+                  from: 'agentadmins',
                   localField: 'codeAgent',
                   foreignField: 'codeAgent',
                   as: 'agent',
                 },
               },
-
               {
                 $lookup: {
-                  from: 'zones',
-                  localField: 'codeZone',
-                  foreignField: 'idZone',
-                  as: 'zone',
-                },
-              },
-              {
-                $lookup: {
-                  from: 'reponses',
+                  from: 'demandes',
                   localField: 'idDemande',
                   foreignField: 'idDemande',
-                  as: 'reponse',
+                  as: 'demande',
                 },
               },
+           
               { $unwind: '$agent' },
-              { $unwind: '$zone' },
+              { $unwind: '$demande' },
+              { $match : {"demande.lot" : periode.periode} },
             ])
             .then((response) => {
+              console.log(response)
               return res.status(200).json(response)
             })
             .catch(function (err) {
