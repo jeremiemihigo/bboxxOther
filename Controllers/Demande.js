@@ -346,8 +346,8 @@ module.exports = {
           {
             $lookup: {
               from: 'conversations',
-              localField: 'idDemande',
-              foreignField: 'idDemande',
+              localField: '_id',
+              foreignField: 'code',
               as: 'conversation',
             },
           },

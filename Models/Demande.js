@@ -38,7 +38,8 @@ const schema = new mongoose.Schema(
     reference: { type: String, required: true },
     sat: { type: String, required: true }, 
     lot: { type: String, required: true },
-    feedback : {type:String, required:true, default :"new", enum : ["new", "chat"]} 
+    feedback : {type:String, required:true, default :"new", enum : ["new", "chat"]},
+    conversation : {type:Array, required:false, default:[]}
   },
   {
     timestamps: true,
