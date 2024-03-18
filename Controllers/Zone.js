@@ -63,14 +63,6 @@ module.exports = {
               as: "agentListe",
             },
           },
-          {
-            $lookup : {
-              from : "shops",
-              localField:"idZone",
-              foreignField:"idZone",
-              as :"shop"
-            }
-          }
         ])
         .then((response) => {
           return res.status(200).json(response.reverse());
