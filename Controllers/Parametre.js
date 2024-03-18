@@ -79,4 +79,22 @@ module.exports = {
       console.log(error)
     }
   },
+  rechercheClient : (req, res)=>{
+    try {
+      const {codeclient} = req.params
+      if(codeclient !== ""){
+        modelParametre.findOne({customer : codeclient.toUpperCase()}).then(response=>{
+          if(response){
+            return res.status(200).json(response)
+          }else{
+            return res.status(201).json([])
+          }
+        }).catch(function(err){console.log(err)})
+      }else{
+        return res.status(201).json([])
+      }
+    } catch (error) {
+      
+    }
+  }
 }
