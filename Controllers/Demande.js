@@ -35,7 +35,7 @@ module.exports = {
       const idDemande = `${annee.substr(
         2,
         3,
-      )}${new Date().getMonth()}${generateNumber(8)}`
+      )}${new Date().getMonth()}${generateNumber(4)}`
       if (
         !codeAgent ||
         !codeZone ||
