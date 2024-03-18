@@ -41,9 +41,13 @@ exports.readUserAdmin = (req, res) => {
       token = req.headers.authorization.split(' ')[1]
     }
     if (token === 'null') {
-      return res.status(404).json('jwt expired')
+      return res.status(404).json('token expired')
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+   
+    if(!decoded){
+      return res.status(404).json('token expired')
+    }
   
 
     ModelAgentAdmin.findOne(
@@ -51,15 +55,14 @@ exports.readUserAdmin = (req, res) => {
       { password: 0 },
     )
       .then((response) => {
-        console.log(response)
         if (response) {
           return res.status(200).json(response)
         } else {
-          return res.status(404).json('jwt expired')
+          return res.status(404).json('token expired')
         }
       })
       .catch(function (err) {
-        console.log(err)
+        return res.status(404).json('token expired')
       })
   } catch (error) {}
 }

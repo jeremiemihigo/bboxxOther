@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const ModelAgentAdmin = require('../Models/AgentAdmin')
+const Model_Agent = require('../Models/Agent')
 
 module.exports = {
   protect: async (req, res, next) => {
@@ -21,18 +21,19 @@ module.exports = {
         return res.status(201).json('token expired')
       }
 
-      ModelAgentAdmin.findById(decoded.id)
-      .then((user) => {
-        if (user) {
-          req.user = user
+      Model_Agent.findById(decoded.id)
+      .then((response) => {
+        if (response) {
+          req.user = response
           next()
         } else {
-          done(null, user)
+          return res.status(201).json('token expired')
         }
       })
       .catch(function (err) {
-        return res.status(201).json('token expired')
+        console.log(err)
       })
+
     } catch (error) {
       return res.status(201).json('token expired')
     }

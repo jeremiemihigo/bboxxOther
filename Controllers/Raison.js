@@ -1,5 +1,5 @@
 const modelRaison = require('../Models/Raison')
-const modelAgent = require('../Models/Agent')
+const modelAgent = require('../Models/AgentAdmin')
 const asyncLab = require('async')
 const modelDemande = require('../Models/Demande')
 const { ObjectId } = require('mongodb')
@@ -32,7 +32,6 @@ module.exports = {
             modelRaison
               .findOne({ raison : raison.toUpperCase(), })
               .then((raisons) => {
-                console.log(raisons)
                 if (raisons) {
                   return res.status(404).json(`${raisons} existe deja`)
                 } else {

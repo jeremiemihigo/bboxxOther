@@ -72,7 +72,7 @@ router.get("/customer/:codeclient", rechercheClient)
 router.get("/touteDemande", ToutesDemande);
 router.get("/toutesDemandeAttente", ToutesDemandeAttente)
 //Rapport visite ménage
-router.post("/rapport", Rapport);
+router.post("/rapport", protect, Rapport);
 router.get("/oneReponse/:id", OneReponse);
 //Create
 
@@ -96,7 +96,7 @@ router.get("/readDemande", DemandeAttente);
 router.post("/demande", upload.single("file"), demande);
 
 router.post("/demandeImage", upload.single("file"));
-router.post("/demandeAgentAll", lectureDemandeBd);
+router.post("/demandeAgentAll", protect, lectureDemandeBd);
 
 router.post("/login", login);
 router.post("/loginUserAdmin", LoginAgentAdmin);
@@ -135,6 +135,6 @@ router.get("/readAgentAdmin", protect, ReadAgentAdmin)
 router.put('/bloquerAgentAdmin', protect, BloquerAgentAdmin)
 router.put("/updateDemande",upload.single("file"), updateDemandeAgent)
 
-router.get("/idDemande/:id", chercherUneDemande)
+router.get("/idDemande/:id",protect, chercherUneDemande)
 
 module.exports = router;
