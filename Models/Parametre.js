@@ -8,5 +8,6 @@ const schema = new mongoose.Schema({
     shop : {type:String, required:false},
     region : {type:String, required:false},
 })
+schema.index({customer : 1})
 const model = mongoose.model("Parametre", schema)
 module.exports = model
