@@ -114,48 +114,7 @@ module.exports = {
       console.log(error)
     }
   },
-  DeleteRaison: (req, res) => {
-    try {
-      const { id } = req.body
-      if (!id) {
-        return res.status(404).json('Veuillez renseigner les champs')
-      }
-      asyncLab.waterfall(
-        [
-          function (done) {
-            modelDemande
-              .find({ _idRaison: new ObjectId(id) })
-              .then((demandes) => {
-                done(null, demandes)
-              })
-              .catch(function (err) {
-                console.log(err)
-              })
-          },
-          function (demandes, done) {
-            if (demandes.length > 0) {
-              return res
-                .status(404)
-                .json(`y a des demandes enregistrées sur cette raison`)
-            } else {
-              modelRaison.findByIdAndRemove(id).then((result) => {
-                done(result)
-              })
-            }
-          },
-        ],
-        function (result) {
-          if (result) {
-            return res.status(200).json(id)
-          } else {
-            return res.status(404).json('Erreur de suppression')
-          }
-        },
-      )
-    } catch (error) {
-      console.log(error)
-    }
-  },
+
   Ajuster : (req, res)=>{
     try {
       const {  table, value } = req.body
