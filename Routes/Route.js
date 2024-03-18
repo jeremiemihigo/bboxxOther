@@ -113,13 +113,19 @@ router.get("/reponseAll",  ReponseDemandeLot)
 
 
 //Raison
-const { AddRaison, ReadRaison,DeleteRaison, UpdateRaison } = require("../Controllers/Raison");
+const { AddRaison, ReadRaison,DeleteRaison,Ajuster, UpdateRaison } = require("../Controllers/Raison");
 const { AddAdminAgent, ResetPasswords, ReadAgentAdmin, BloquerAgentAdmin } = require("../Controllers/AgentAdmin");
-
+const { AddShop, ReadShop, UpdateOneField } = require("../Controllers/Shop");
+router.post("/ajuster", Ajuster)
 router.post("/raison", AddRaison)
 router.get("/raison", ReadRaison)
 router.delete("/raison", DeleteRaison)
 router.put("/raison", UpdateRaison)
+
+//Shop
+router.post("/shop", AddShop, ReadShop)
+router.get("/shop", ReadShop)
+router.put("/shop", UpdateOneField)
 
 //Agent
 router.post("/addAdminAgent", AddAdminAgent)

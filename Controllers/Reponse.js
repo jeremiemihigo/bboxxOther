@@ -1,7 +1,6 @@
 const ModelReponse = require('../Models/Reponse')
 const asyncLab = require('async')
 const ModelDemande = require('../Models/Demande')
-const ModelAgent = require('../Models/Agent')
 const ModelAgentAdmin = require('../Models/AgentAdmin')
 const _ = require('lodash')
 const ModelPeriode = require('../Models/Periode')
@@ -122,7 +121,7 @@ module.exports = {
               },
               {
                 $match: {
-                  codeclient: codeClient,
+                  codeclient: codeClient.toUpperCase(),
                   'demande.lot': periode.periode,
                 },
               },

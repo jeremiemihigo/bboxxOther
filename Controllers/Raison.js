@@ -8,7 +8,7 @@ module.exports = {
   AddRaison: (req, res) => {
     try {
       const { raison, codeAgent } = req.body
- console.log(req.body)
+ 
       if (!raison) {
         return res.status(404).json('Veuillez renseigner les champs')
       }
@@ -157,4 +157,28 @@ module.exports = {
       console.log(error)
     }
   },
+  Ajuster : (req, res)=>{
+    try {
+      const {  table, value } = req.body
+      //dates doit etre soit true les dates ne doivent pas etre vide ou false
+     
+      if(table && table.length < 1){
+        return res.status(201).json("Veuillez selectionner au moins un feedback")
+      }
+      if(value === ""){
+        return res.status(201).json("Veuillez renseigner le feedback a considéré")
+      }
+  
+      modelDemande.updateMany({
+        raison : {$in : table}
+      }, { $set: { "raison" : value } }, {new : true}).then(response=>{
+        return res.status(200).json(response)
+      }).catch(function(err){
+        console.log(err)
+      })
+    
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
