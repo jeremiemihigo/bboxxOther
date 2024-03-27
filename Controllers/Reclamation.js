@@ -17,7 +17,7 @@ module.exports = {
                 if(response.length > 0){
                   done(null, true)
                 }else{
-                  return res.status(201).json('Veuillez patienter svp! votre demande est en cours de traitement')
+                  return res.status(201).json('Veuillez patienter! votre demande est en cours de traitement')
                 }
               }).catch(function (errr) {
                 if (errr) {
