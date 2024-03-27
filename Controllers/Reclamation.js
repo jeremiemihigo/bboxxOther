@@ -12,22 +12,39 @@ module.exports = {
       asyncLab.waterfall(
         [
           function (done) {
-            modelReclamation
-              .create({
-                message,codeAgent,
-                sender,
-                code : new ObjectId(_id),
-              })
-              .then((response) => {
-                if (response) {
-                  done(response)
+            if(sender === "agent"){
+              modelReclamation.find({code : new ObjectId(_id)}).then(response=>{
+                if(response.length > 0){
+                  done(null, true)
+                }else{
+                  return res.status(201).json('Veuillez patienter svp! votre demande est en cours de traitement')
                 }
-              })
-              .catch(function (errr) {
+              }).catch(function (errr) {
                 if (errr) {
                   return res.status(201).json('Try again')
                 }
               })
+            }else{
+              done(null, true)
+            }
+          },
+          function(rep, done){
+            modelReclamation
+            .create({
+              message,codeAgent,
+              sender,
+              code : new ObjectId(_id),
+            })
+            .then((response) => {
+              if (response) {
+                done(response)
+              }
+            })
+            .catch(function (errr) {
+              if (errr) {
+                return res.status(201).json('Try again')
+              }
+            })
           },
           function(reclamation, done){
             modelReclamation.find({ code : reclamation.code}).then(recl=>{
