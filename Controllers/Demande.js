@@ -6,6 +6,7 @@ const asyncLab = require('async')
 const { generateNumber } = require('../Static/Static_Function')
 const modelReclamation = require('../Models/Reclamation')
 const { ObjectId } = require('mongodb')
+const modelShop = require("../Models/Shop")
 
 module.exports = {
   demande: (req, res) => {
@@ -13,7 +14,7 @@ module.exports = {
       //   const { codeAgent, codeZone,} = req.user
       const {
         codeclient,
-        typeImage,
+        typeImage,idShop,
         codeAgent,
         codeZone,
         commune,
@@ -44,7 +45,7 @@ module.exports = {
         !sector ||
         !cell ||
         !reference ||
-        !sat
+        !sat || !idShop
       ) {
         return res.status(201).json('Veuillez renseigner les champs')
       }
@@ -98,8 +99,23 @@ module.exports = {
                 return res.status(201).json('Erreur')
               })
           },
+          function(agent, response, done){
+            modelShop.findOne({idShop}).then(shop=>{
+              if(shop){
+                done(null, agent, response, shop,)
+              }else{
+                return res.status(201).json("Shop est introuvable")
+              }
+            }).catch(function (err) {
+              if (err.message) {
+                return res.status(201).json('' + err.message)
+              } else {
+                return res.status(201).json('Erreur')
+              }
+            })
+          },
 
-          function (agent, periode, done) {
+          function (agent, periode, shop, done) {
             modelDemande
               .create({
                 codeAgent: agent.codeAgent,
@@ -113,7 +129,7 @@ module.exports = {
                 idDemande,
                 sector,
                 cell,
-                reference,
+                reference,idShop:shop.idShop,
                 sat,
                 file: filename,
                 commune,
@@ -362,8 +378,10 @@ module.exports = {
           {
             $unwind: '$agent',
           },
+          
         ])
         .then((response) => {
+          console.log(response)
           if (response) {
             return res.status(200).json(response.reverse())
           }
@@ -424,6 +442,15 @@ module.exports = {
               },
                { $unwind: '$agent' },
                { $unwind: '$zone' },
+               {
+                $lookup: {
+                  from: 'shops',
+                  localField: 'agent.idShop',
+                  foreignField: 'idShop',
+                  as: 'shopAgent',
+                },
+              },
+              { $unwind: '$shopAgent' },
               {
                 $lookup: {
                   from: 'conversations',
@@ -461,6 +488,7 @@ module.exports = {
                   as: 'reponseId',
                 },
               },
+              {$limit : 10}
             ])
             .then((reclamation) => {
               return res.status(200).json({

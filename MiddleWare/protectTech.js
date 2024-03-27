@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const Model_Agent = require('../Models/Agent')
 
 module.exports = {
-  protect: async (req, res, next) => {
+  protectTech: async (req, res, next) => {
     let token
     if (
       req.headers.authorization &&
@@ -20,9 +20,10 @@ module.exports = {
       if (!decoded?.id) {
         return res.status(201).json('token expired')
       }
-
+console.log(decoded)
       Model_Agent.findById(decoded.id)
       .then((response) => {
+        console.log(response)
         if (response) {
           req.user = response
           next()

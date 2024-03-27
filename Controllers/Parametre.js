@@ -83,9 +83,34 @@ module.exports = {
     try {
       const {codeclient} = req.params
       if(codeclient !== ""){
-        modelParametre.findOne({customer : codeclient.toUpperCase()}).then(response=>{
-          if(response){
-            return res.status(200).json(response)
+        modelParametre.aggregate([
+          {$match : {customer : codeclient.toUpperCase()}},
+          {
+            $lookup : {
+              from:"zones",
+              localField:"region",
+              foreignField:"idZone",
+              as:"region"
+            }
+          },
+          {
+            $unwind:"$region"
+          },
+          {
+            $lookup : {
+              from:"shops",
+              localField:"shop",
+              foreignField:"idShop",
+              as:"shop"
+            }
+          },
+          {
+            $unwind:"$shop"
+          }
+        ])
+      .then(response=>{
+          if(response.length > 0){
+            return res.status(200).json(response[0])
           }else{
             return res.status(201).json([])
           }

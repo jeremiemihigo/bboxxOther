@@ -5,6 +5,7 @@ const ModelAgentAdmin = require('../Models/AgentAdmin')
 const _ = require('lodash')
 const ModelPeriode = require('../Models/Periode')
 const { dateActuelle } = require('../Static/Static_Function')
+const modelAction = require('../Models/Actions')
 
 module.exports = {
   reponse: (req, res) => {
@@ -17,9 +18,9 @@ module.exports = {
         PayementStatut,
         consExpDays,
         nomClient,
-        region,
+        idZone,
         codeAgent,
-        shop,
+        idShop,
       } = req.body
       // const {} = req.user
       if (
@@ -30,8 +31,8 @@ module.exports = {
         !PayementStatut ||
         !consExpDays ||
         !nomClient ||
-        !region ||
-        !shop
+        !idShop ||
+        !idZone
       ) {
         return res.status(400).json('Veuillez renseigner les champs')
       }
@@ -126,19 +127,18 @@ module.exports = {
                 },
               },
             ]).then((result) => {
-             
               if (
                 result.length > 0 &&
                 result[0].agent.fonction === demande[0].agent.fonction
               ) {
-                let text = ""
-                if(result[0].agent.codeAgent === demande[0].agent.codeAgent){
+                let text = ''
+                if (result[0].agent.codeAgent === demande[0].agent.codeAgent) {
                   text = `Vous avez visité ce client le ${dateActuelle(
                     result[0].dateSave,
                   )}
                   à ${new Date(result[0].createdAt).toLocaleTimeString()}
                   `
-                }else{
+                } else {
                   text = `Cette demande a été repondue le ${dateActuelle(
                     result[0].dateSave,
                   )}
@@ -157,21 +157,22 @@ module.exports = {
             ModelReponse.create({
               idDemande: demande[0].idDemande,
               codeclient: codeClient,
-              region,
-              shop,
+              idShop,
+              idZone,
+              idShop,
+              idZone,
               codeCu,
               clientStatut,
               PayementStatut,
               consExpDays,
               nomClient,
-              jOrH: 'j',
               text: periode.periode, // La periode
               codeAgent: agent.codeAgent,
               dateSave: dates.split('T')[0],
             })
               .then((response) => {
                 if (response) {
-                  done(response)
+                  done(null, response)
                 } else {
                   done("Erreur d'enregistrement")
                 }
@@ -180,6 +181,23 @@ module.exports = {
                 console.log(err)
                 done('Erreur 2')
               })
+          },
+          function (reponse, done) {
+            const table = ['defaulted', 'expired']
+            if (table.includes(reponse.PayementStatut)) {
+              modelAction
+                .create({
+                  idReponse: reponse._id,
+                  action : "undefined"
+                })
+                .then((actions) => {
+                  if (actions) {
+                    done(reponse)
+                  }
+                })
+            }else{
+              done(reponse)
+            }
           },
         ],
         function (result) {
@@ -246,7 +264,25 @@ module.exports = {
             as: 'demande',
           },
         },
+        {
+          $lookup: {
+            from: 'zones',
+            localField: 'idZone',
+            foreignField: 'idZone',
+            as: 'region',
+          },
+        },
+        {
+          $lookup: {
+            from: 'shops',
+            localField: 'idShop',
+            foreignField: 'idShop',
+            as: 'shop',
+          },
+        },
         { $unwind: '$demande' },
+        { $unwind: '$region' },
+        { $unwind: '$shop' },
         {
           $lookup: {
             from: 'agentadmins',
@@ -293,6 +329,8 @@ module.exports = {
       )
     } catch (error) {}
   },
+
+  //A demolir
   ReponseDemandeLot: (req, res) => {
     try {
       asyncLab.waterfall(

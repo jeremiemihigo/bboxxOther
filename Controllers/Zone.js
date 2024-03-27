@@ -7,7 +7,6 @@ module.exports = {
   Zone: (req, res) => {
     try {
       const { denomination } = req.body;
-      console.log(req.body);
       if (isEmpty(denomination)) {
         return res.status(400).json("Veuillez renseigner la dénomination");
       }
@@ -52,14 +51,16 @@ module.exports = {
           {
             $lookup: {
               from: "agents",
-              pipeline: [{ $match: { fonction: "tech" } }],
+              let : {zone : "$idZone"},
+              pipeline: [{ $match: {$expr : { fonction: "tech", codeZone : "$$zone" }} }],
               as: "techListe",
             },
           },
           {
             $lookup: {
               from: "agents",
-              pipeline: [{ $match: { fonction: "agent" } }],
+              let : {zone : "$idZone"},
+              pipeline: [{ $match: {$expr : {fonction: "agent", codeZone : "$$zone" }}  }],
               as: "agentListe",
             },
           },

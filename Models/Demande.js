@@ -12,6 +12,7 @@ const schema = new mongoose.Schema(
     idDemande: { type: String, required: true, unique:true },
     commune: { type: String, required: true },
     numero: { type: String, required: false },
+    idShop: { type: String, required: true },
     codeAgent: {
       type: String,
       required: [true, "Le code agent est obligatoire"],

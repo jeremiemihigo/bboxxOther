@@ -164,5 +164,6 @@ const sendToken = (user, statusCode, res) => {
     codeZone: user.codeZone,
     nom: user.nom,
     first: user.first,
+    shop : user.idShop
   })
 }

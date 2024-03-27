@@ -71,19 +71,49 @@ module.exports = {
           'demande.coordonnes': 1,
           'demande.statut': 1,
           'demande.sector': 1,
+          'demande.lot': 1,
           'demande.cell': 1,
           'demande.reference': 1,
           'demande.sat': 1,
           'demande.createdAt': 1,
           'demande.raison': 1,
           nomClient: 1,
-          region: 1,
+          action: 1,
           shop: 1,
+          region: 1,
         },
       }
       let sort = {
         $sort: { createdAt: -1 },
       }
+      let lookRegion = {
+        $lookup: {
+          from: 'zones',
+          localField: 'idZone',
+          foreignField: 'idZone',
+          as: 'region',
+        },
+      }
+      let lookShop = {
+        $lookup: {
+          from: 'shops',
+          localField: 'idShop',
+          foreignField: 'idShop',
+          as: 'shop',
+        },
+      }
+      let unwindShop = { $unwind: '$shop' }
+      let unwindRegion = { $unwind: '$region' }
+
+      let lookAction = {
+        $lookup: {
+          from: 'actions',
+          localField: '_id',
+          foreignField: 'idReponse',
+          as: 'action',
+        },
+      }
+
       asyncLab.waterfall([
         function (done) {
           ModelReponse.aggregate([
@@ -94,6 +124,11 @@ module.exports = {
             lookAgent,
             unwindDemandeur,
             unwindagent,
+            lookRegion,
+            lookShop,
+            unwindShop,
+            unwindRegion,
+            lookAction,
             project,
             sort,
           ]).then((response) => {
@@ -167,7 +202,6 @@ module.exports = {
             })
         },
         function (result, done) {
-        
           try {
             let donner = []
 

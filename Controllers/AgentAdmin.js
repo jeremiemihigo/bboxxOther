@@ -39,7 +39,6 @@ module.exports = {
               id : new Date()
             })
               .then((result) => {
-                console.log(result)
                 if (result) {
                   done(null, result)
                 }

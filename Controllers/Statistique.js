@@ -2,32 +2,40 @@ const modelDemande = require('../Models/Demande')
 const _ = require('lodash')
 const asyncLab = require('async')
 const { ObjectId } = require('mongodb')
+const modelPeriode = require("../Models/Periode")
 const modelConversation = require("../Models/Reclamation")
 
 module.exports = {
   readPeriodeGroup: (req, res) => {
     try {
-      const { codeAgent } = req.params
+      const { codeAgent } = req.user
       asyncLab.waterfall([
         function (done) {
-          modelDemande
-            .aggregate([{ $group: { _id: '$lot' } }])
-            .then((response) => {
-              if (response) {
-                let table = []
-                for (let i = 0; i < response.length; i++) {
-                  table.push(response[i]._id)
-                }
-                done(null, table)
-              }
-            })
+          modelPeriode.findOne({}).then(periode=>{
+            if(periode){
+              done(null, periode)
+            }
+          }).catch(function(err){console.log(err)})
         },
-        function (lot, done) {
+        function(periode, done){
+          modelDemande
+          .aggregate([{ $group: { _id: '$lot' } }])
+          .then((response) => {
+            if (response) {
+              let table = []
+              for (let i = 0; i < response.length; i++) {
+
+                table.push(response[i]._id)
+              }
+              done(null, periode, table)
+            }
+          })
+        },
+        function (periode, lot, done) {
           modelDemande
             .aggregate([
               {
                 $match: {
-                  codeAgent,
                   codeAgent,
                   lot: {
                     $in: lot,
@@ -42,20 +50,42 @@ module.exports = {
                   as: 'reponse',
                 },
               },
+              {
+                $lookup: {
+                  from: 'conversations',
+                  localField: '_id',
+                  foreignField: 'code',
+                  as: 'conversation',
+                },
+              },
+
+              
             ])
             .then((response) => {
-              done(null, lot, response)
+              done(null, periode, lot, response)
             })
         },
-        function (lot, reponse, done) {
+        function (periode, lot, reponse, done) {
           let table = []
           for (let i = 0; i < lot.length; i++) {
             table.push({
               _id: lot[i],
-              demande: reponse.filter((x) => x.lot === lot[i]).length,
-              reponse: reponse.filter(
+              active : lot[i] === periode.periode ? true : false,
+              attente : reponse.filter(
+                (x) => x.lot === lot[i] && x.reponse.length < 1 && x.conversation.length < 1,
+              ),
+
+              nConforme : reponse.filter(
+                (x) => x.lot === lot[i] && x.reponse.length < 1 && x.conversation.length > 0 ,
+              ),
+
+              valide :reponse.filter(
                 (x) => x.lot === lot[i] && x.reponse.length > 0,
-              ).length,
+              ),
+              allData :reponse.filter(
+                (x) => x.lot === lot[i]
+              ),
+              
             })
           }
           res.status(200).json(table)
@@ -166,6 +196,18 @@ module.exports = {
       })
     } catch (error) {
       console.log(error)
+    }
+  },
+  searchPaquet : (req, res)=>{
+    try {
+      modelDemande
+      .aggregate([{ $group: { _id: '$lot' } }]).then(response=>{
+        if(response.length >0){
+          return res.status(200).json(response)
+        }
+      }).catch(function(err){console.log(err)})
+    } catch (error) {
+      
     }
   }
 }

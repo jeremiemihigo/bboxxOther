@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Zone, ReadZone, AffecterZone } = require("../Controllers/Zone");
 const { protect } = require("../MiddleWare/protect");
+const { protectTech } = require("../MiddleWare/protectTech");
 const {
   AddAgent,
   ReadAgent,
@@ -36,7 +37,7 @@ const {
   ReadMessage,
   DeleteReclamation,
 } = require("../Controllers/Reclamation");
-const { readPeriodeGroup, demandePourChaquePeriode, chercherUneDemande } = require("../Controllers/Statistique");
+const { readPeriodeGroup, demandePourChaquePeriode,searchPaquet, chercherUneDemande } = require("../Controllers/Statistique");
 
 
 var storage = multer.diskStorage({
@@ -78,16 +79,16 @@ router.get("/oneReponse/:id", OneReponse);
 
 router.post("/paramatre", Parametre);
 router.post("/postzone", Zone);
-router.post("/postAgent", AddAgent);
+router.post("/postAgent", AddAgent, ReadAgent);
 router.post("/reponsedemande", reponse);
 router.post("/reclamation", Reclamation, ReadMessage);
 //Update
 router.put("/zone", AffecterZone);
 router.put("/reponse", updateReponse);
-router.put("/bloquer", BloquerAgent);
+router.put("/bloquer", BloquerAgent, ReadAgent);
 router.put("/reset", resetPassword);
 router.delete("/deleteReclamation/:id", DeleteReclamation);
-router.put("/agent", UpdateAgent);
+router.put("/agent", UpdateAgent, ReadAgent);
 router.post("/manyAgent", InsertManyAgent)
 router.put("/userId", UpdatePassword)
 //Mobiles
@@ -103,7 +104,8 @@ router.post("/loginUserAdmin", LoginAgentAdmin);
 
 //Lien après presentation du systeme
 router.get("/demandeAll/:lot/:codeAgent", lectureDemandeMobile);
-router.get("/paquet/:codeAgent", readPeriodeGroup)
+router.get("/paquet",protectTech, readPeriodeGroup)
+router.get("/lot", searchPaquet)
 router.get("/periodeActive", ReadPeriodeActive)
 router.get("/demandePourChaquePeriode", demandePourChaquePeriode)
 router.get("/statZone", StatZone)
@@ -117,6 +119,7 @@ router.get("/reponseAll",  ReponseDemandeLot)
 const { AddRaison, ReadRaison,Ajuster, UpdateRaison } = require("../Controllers/Raison");
 const { AddAdminAgent, ResetPasswords, ReadAgentAdmin, BloquerAgentAdmin } = require("../Controllers/AgentAdmin");
 const { AddShop, ReadShop, UpdateOneField } = require("../Controllers/Shop");
+const { AddAction, ReadAction } = require("../Controllers/Action");
 router.post("/ajuster", Ajuster)
 router.post("/raison", AddRaison)
 router.get("/raison", ReadRaison)
@@ -133,7 +136,10 @@ router.put("/resetPasswordAgentAdmin", protect, ResetPasswords)
 router.get("/readAgentAdmin", protect, ReadAgentAdmin)
 router.put('/bloquerAgentAdmin', protect, BloquerAgentAdmin)
 router.put("/updateDemande",upload.single("file"), updateDemandeAgent)
-
 router.get("/idDemande/:id",protect, chercherUneDemande)
+
+//Actions
+router.post("/action", AddAction, ReadAction)
+router.get("/action", ReadAction)
 
 module.exports = router;

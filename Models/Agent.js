@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UserSchema = new mongoose.Schema(
   {
-    nom: { type: String, required: true },
-    codeAgent: { type: String, required: true, unique: true, trim: true },
+    nom: { type: String, required: true, uppercase:true },
+    codeAgent: { type: String, required: true, unique: true, trim: true, uppercase: true },
     codeZone: { type: String, required: true },
     fonction: {
       type: String,
@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema(
       enum: ["admin", "co", "tech", "agent"],
     },
     password: { type: String, required: true, default: 1234 },
-    shop: { type: String, required: true },
+    idShop: { type: String, required: true },
     telephone: { type: String, required: false },
     active: { type: Boolean, required: true, default: true },
     id: { type: String, required: true, unique:true },

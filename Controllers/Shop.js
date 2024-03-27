@@ -1,5 +1,6 @@
 const modelShop = require('../Models/Shop')
 const asyncLab = require('async')
+const { generateNumber } = require('../Static/Static_Function')
 
 module.exports = {
   AddShop: (req, res, next) => {
@@ -27,7 +28,7 @@ module.exports = {
           },
           function (value, done) {
             modelShop
-              .create({ shop, id: new Date(), adresse, idZone })
+              .create({ shop, id: new Date(), adresse, idZone, idShop : generateNumber(9) })
               .then((result) => {
                 done(result)
               })

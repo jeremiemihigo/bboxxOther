@@ -11,10 +11,10 @@ const schema = new mongoose.Schema(
     idDemande: { type: String, required: true, unique: true },
     dateSave: { type: Date, required: true },
     codeAgent: { type: String, required: true },
-    nomClient: { type: String, required: true, uppercase:true },
+    nomClient: { type: String, required: true, uppercase:true, trim:true },
     action: { type: String, required: false },
-    region: { type: String, required: true, default: "" },
-    shop: { type: String, required: true, default: "" },
+    idZone: { type: String, required: true},
+    idShop: { type: String, required: true,},
   },
   { timestamps: true }
 );
