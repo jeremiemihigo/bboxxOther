@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema(
     fonction: {
       type: String,
       required: true,
-      enum: ["admin", "co", "tech", "agent"],
+      enum: ["tech", "agent"],
     },
     password: { type: String, required: true, default: 1234 },
     idShop: { type: String, required: true },

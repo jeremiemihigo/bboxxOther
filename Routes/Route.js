@@ -22,7 +22,7 @@ const {
   deleteDemande,
   updateDemandeAgent,
 } = require("../Controllers/Demande");
-const { Parametre, ReadParametre, ReadPeriodeActive, deleteParams, rechercheClient } = require("../Controllers/Parametre");
+const { Parametre, ReadParametre, ReadPeriodeActive, deleteParams, rechercheClient, updateClient } = require("../Controllers/Parametre");
 
 const multer = require("multer");
 const {
@@ -69,6 +69,7 @@ router.get("/userAdmin", readUserAdmin);
 router.get("/message/:codeAgent", ReadMessage);
 
 router.get("/parametreRead", ReadParametre);
+router.put('/parametre', updateClient, ReadParametre)
 router.get("/customer/:codeclient", rechercheClient)
 router.get("/touteDemande", ToutesDemande);
 router.get("/toutesDemandeAttente", ToutesDemandeAttente)
