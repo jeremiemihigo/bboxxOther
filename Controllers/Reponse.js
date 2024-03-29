@@ -63,7 +63,6 @@ module.exports = {
                 }
               })
               .catch(function (err) {
-                console.log(err)
                 done('Erreur 1')
               })
           },
@@ -127,27 +126,17 @@ module.exports = {
                 },
               },
             ]).then((result) => {
-              if (
-                result.length > 0 &&
-                result[0].agent.fonction === demande[0].agent.fonction
-              ) {
-                let text = ''
-                if (result[0].agent.codeAgent === demande[0].agent.codeAgent) {
-                  text = `Vous avez visité ce client le ${dateActuelle(
-                    result[0].dateSave,
-                  )}
-                  à ${new Date(result[0].createdAt).toLocaleTimeString()}
-                  `
-                } else {
-                  text = `Cette demande a été repondue le ${dateActuelle(
-                    result[0].dateSave,
-                  )}
-                  à ${new Date(result[0].createdAt).toLocaleTimeString()}
-                  pour ${result[0].agent.nom} code :
-                     ${result[0].agent.codeAgent}`
+              if(result.length > 0){
+                const doublon = result.filter(x=>x.agent.fonction === demande[0].agent.fonction)
+                if(doublon.length > 0){
+                  done(`Ce client a été visiter le ${dateActuelle(
+                    doublon[0]?.demande.createdAt,
+                  )} par ${doublon[0].agent.nom} code : ${doublon[0].agent.codeAgent}`)
+                }else{
+                  done(null, periode, demande, agent)
                 }
-                done(text)
-              } else {
+              }
+               else {
                 done(null, periode, demande, agent)
               }
             })
@@ -329,7 +318,6 @@ module.exports = {
       )
     } catch (error) {}
   },
-
   //A demolir
   ReponseDemandeLot: (req, res) => {
     try {
