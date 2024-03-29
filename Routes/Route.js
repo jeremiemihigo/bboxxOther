@@ -72,7 +72,7 @@ router.get("/parametreRead", ReadParametre);
 router.put('/parametre', updateClient, ReadParametre)
 router.get("/customer/:codeclient", rechercheClient)
 router.get("/touteDemande", ToutesDemande);
-router.get("/toutesDemandeAttente", ToutesDemandeAttente)
+router.get("/toutesDemandeAttente", protect, ToutesDemandeAttente)
 //Rapport visite ménage
 router.post("/rapport", protect, Rapport);
 router.get("/oneReponse/:id", OneReponse);

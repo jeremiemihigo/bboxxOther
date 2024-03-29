@@ -488,7 +488,7 @@ module.exports = {
                   as: 'reponseId',
                 },
               },
-              {$limit : 10}
+              
             ])
             .then((reclamation) => {
               return res.status(200).json({
