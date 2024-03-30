@@ -15,7 +15,7 @@ const schema = new mongoose.Schema(
     telephone: { type: String, required: true, unique:true, trim:true },
     active: { type: Boolean, required: true, default: true },
     id: { type: Date, required: true, unique:true },
-    first : {type:Boolean, required:true, default : true}
+    first : {type:Boolean, required:true, default : true},
   },
   { timestamps: true }
 );

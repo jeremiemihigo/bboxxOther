@@ -10,7 +10,7 @@ const {
   UpdateAgent,
   InsertManyAgent,
 } = require("../Controllers/Agent");
-const { login, resetPassword,LoginAgentAdmin, UpdatePassword } = require("../Controllers/Login");
+const { login, resetPassword,LoginAgentAdmin, UpdatePassword, UpdatePasswordAdmin } = require("../Controllers/Login");
 const {
   demande,
   DemandeAttente,
@@ -92,6 +92,7 @@ router.delete("/deleteReclamation/:id", DeleteReclamation);
 router.put("/agent", UpdateAgent, ReadAgent);
 router.post("/manyAgent", InsertManyAgent)
 router.put("/userId", UpdatePassword)
+router.put("/userAdmin", UpdatePasswordAdmin)
 //Mobiles
 router.get("/demandeReponse/:id", ToutesDemandeAgent);
 router.get("/readDemande", DemandeAttente);

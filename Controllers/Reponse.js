@@ -195,15 +195,6 @@ module.exports = {
               { $match: { idDemande: result.idDemande } },
               {
                 $lookup: {
-                  from: 'agents',
-                  localField: 'codeAgent',
-                  foreignField: 'codeAgent',
-                  as: 'agent',
-                },
-              },
-
-              {
-                $lookup: {
                   from: 'zones',
                   localField: 'codeZone',
                   foreignField: 'idZone',
@@ -216,6 +207,15 @@ module.exports = {
                   localField: 'idDemande',
                   foreignField: 'idDemande',
                   as: 'reponse',
+                },
+              },
+              { $unwind: '$reponse' },
+              {
+                $lookup: {
+                  from: 'agentadmins',
+                  localField: 'reponse.codeAgent',
+                  foreignField: 'codeAgent',
+                  as: 'agent',
                 },
               },
               { $unwind: '$agent' },
