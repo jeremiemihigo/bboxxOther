@@ -76,7 +76,7 @@ module.exports = {
               ),
 
               nConforme : reponse.filter(
-                (x) => x.lot === lot[i] && x.reponse.length < 1 && x.conversation.length > 0 ,
+                (x) => x.lot === lot[i] && x.reponse.length === 0 && x.conversation.length > 0 ,
               ),
 
               valide :reponse.filter(

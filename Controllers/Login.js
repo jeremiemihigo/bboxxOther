@@ -14,7 +14,7 @@ exports.login = async (req, res) => {
   try {
     //const user = await Model_User.aggregate([ look])
     const user = await ModelAgent.findOne({
-      codeAgent: username,
+      codeAgent: username.toUpperCase(),
       active: true,
     }).select('+password')
 
