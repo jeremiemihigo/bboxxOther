@@ -132,7 +132,7 @@ module.exports = {
                 if(doublon.length > 0){
                   done(`Ce client a été visiter le ${dayjs(
                     doublon[0]?.demande.createdAt,
-                  ).format("dd/mm/yyyy")} par ${doublon[0].agent.nom} code : ${doublon[0].agent.codeAgent} à ${dayjs(doublon[0]?.demande.createdAt).format("hh:mm:ss")} `)
+                  ).format("DD/MM/YYYY")} par ${doublon[0].agent.nom} code : ${doublon[0].agent.codeAgent} à ${dayjs(doublon[0]?.demande.createdAt).format("hh:mm:ss")} `)
                 }else{
                   done(null, periode, demande, agent)
                 }
