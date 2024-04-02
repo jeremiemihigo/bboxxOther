@@ -1,5 +1,7 @@
 const asyncLab = require('async')
 const modelReclamation = require('../Models/Reclamation')
+const modelPeriode = require('../Models/Periode')
+const modelDemande = require('../Models/Demande')
 const { ObjectId } = require('mongodb')
 
 module.exports = {
@@ -12,52 +14,64 @@ module.exports = {
       asyncLab.waterfall(
         [
           function (done) {
-            if(sender === "agent"){
-              modelReclamation.find({code : new ObjectId(_id)}).then(response=>{
-                if(response.length > 0){
-                  done(null, true)
-                }else{
-                  return res.status(201).json('Veuillez patienter! votre demande est en cours de traitement')
+            if (sender === 'agent') {
+              modelReclamation
+                .find({ code: new ObjectId(_id) })
+                .then((response) => {
+                  if (response.length > 0) {
+                    done(null, true)
+                  } else {
+                    return res
+                      .status(201)
+                      .json(
+                        'Veuillez patienter! votre demande est en cours de traitement',
+                      )
+                  }
+                })
+                .catch(function (errr) {
+                  if (errr) {
+                    return res.status(201).json('Try again')
+                  }
+                })
+            } else {
+              done(null, true)
+            }
+          },
+          function (rep, done) {
+            modelReclamation
+              .create({
+                message,
+                codeAgent,
+                sender,
+                code: new ObjectId(_id),
+              })
+              .then((response) => {
+                if (response) {
+                  done(response)
                 }
-              }).catch(function (errr) {
+              })
+              .catch(function (errr) {
                 if (errr) {
                   return res.status(201).json('Try again')
                 }
               })
-            }else{
-              done(null, true)
-            }
           },
-          function(rep, done){
+          function (reclamation, done) {
             modelReclamation
-            .create({
-              message,codeAgent,
-              sender,
-              code : new ObjectId(_id),
-            })
-            .then((response) => {
-              if (response) {
-                done(response)
-              }
-            })
-            .catch(function (errr) {
-              if (errr) {
-                return res.status(201).json('Try again')
-              }
-            })
+              .find({ code: reclamation.code })
+              .then((recl) => {
+                done(recl)
+              })
+              .catch(function (err) {
+                console.log(err)
+              })
           },
-          function(reclamation, done){
-            modelReclamation.find({ code : reclamation.code}).then(recl=>{
-              done(recl)
-            }).catch(function(err){console.log(err)})
-          }
-          
         ],
         function (result) {
-          if(result){
+          if (result) {
             req.recherche = result._id
             next()
-          }else{
+          } else {
             return res.status(200).json([])
           }
         },
@@ -68,9 +82,11 @@ module.exports = {
   },
   ReadMessage: (req, res) => {
     try {
-    const recherche = req.recherche
-     const { codeAgent } = req.params
-     let match = recherche ? {$match : {_id : recherche }} :{$match : {codeAgent }}
+      const recherche = req.recherche
+      const { codeAgent } = req.params
+      let match = recherche
+        ? { $match: { _id: recherche } }
+        : { $match: { codeAgent } }
 
       modelReclamation
         .aggregate([
@@ -107,8 +123,8 @@ module.exports = {
         .then((response) => {
           if (response) {
             return res.status(200).json(id)
-          }else{
-            return res.status(201).json("")
+          } else {
+            return res.status(201).json('')
           }
         })
         .catch(function (err) {
@@ -118,5 +134,71 @@ module.exports = {
       console.log(error)
     }
   },
-  
+  demandeIncorrect: (req, res) => {
+    try {
+      asyncLab.waterfall(
+        [
+          function (done) {
+            modelPeriode
+              .findOne({})
+              .then((response) => {
+                if (response) {
+                  done(null, response)
+                } else {
+                  return res.status(201).json('Erreur')
+                }
+              })
+              .catch(function (err) {
+                return res.status(201).json('Erreur ' + err)
+              })
+          },
+          function (periode, done) {
+            modelDemande
+              .aggregate([
+                {
+                  $match: {
+                    lot: periode.periode,
+                    valide: false,
+                    feedback: 'chat',
+                  },
+                },
+                {
+                  $lookup: {
+                    from: 'conversations',
+                    localField: '_id',
+                    foreignField: 'code',
+                    as: 'conversation',
+                  },
+                },
+                {
+                  $lookup: {
+                    from: 'agents',
+                    localField: 'codeAgent',
+                    foreignField: 'codeAgent',
+                    as: 'agent',
+                  },
+                },
+                {
+                  $unwind: '$agent',
+                },
+              ])
+              .then((result) => {
+                done(result)
+              })
+          },
+        ],
+        function (result) {
+          try {
+            if (result.length > 0) {
+              return res.status(200).json(result)
+            } else {
+              return res.status(201).json('Erreur')
+            }
+          } catch (error) {}
+        },
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }

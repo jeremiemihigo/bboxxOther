@@ -4,8 +4,6 @@ const ModelDemande = require('../Models/Demande')
 const ModelAgentAdmin = require('../Models/AgentAdmin')
 const _ = require('lodash')
 const ModelPeriode = require('../Models/Periode')
-const { dateActuelle } = require('../Static/Static_Function')
-const modelAction = require('../Models/Actions')
 const dayjs = require("dayjs")
 const Reclamation = require("../Models/Reclamation")
 
@@ -169,29 +167,12 @@ module.exports = {
                 }
               })
               .catch(function (err) {
-                console.log(err)
                 done('Erreur 2')
               })
           },
           function (demande, reponse, done) {
-            // const table = ['defaulted', 'expired']
-            // if (table.includes(reponse.PayementStatut)) {
-            //   modelAction
-            //     .create({
-            //       idReponse: reponse._id,
-            //       action : "undefined"
-            //     })
-            //     .then((actions) => {
-            //       if (actions) {
-            //         done(reponse)
-            //       }
-            //     })
-            // }else{
-            //   done(reponse)
-            // }
            try {
             Reclamation.deleteMany( {code : demande._id} ).then(deleted=>{
-              console.log(deleted)
               done(reponse)
             }).catch(function(err){});
            } catch (error) {
@@ -201,46 +182,7 @@ module.exports = {
         ],
         function (result) {
           if (result.idDemande) {
-            ModelDemande.aggregate([
-              { $match: { idDemande: result.idDemande } },
-              {
-                $lookup: {
-                  from: 'zones',
-                  localField: 'codeZone',
-                  foreignField: 'idZone',
-                  as: 'zone',
-                },
-              },
-              {
-                $lookup: {
-                  from: 'reponses',
-                  localField: 'idDemande',
-                  foreignField: 'idDemande',
-                  as: 'reponse',
-                },
-              },
-              { $unwind: '$reponse' },
-              {
-                $lookup: {
-                  from: 'agentadmins',
-                  localField: 'reponse.codeAgent',
-                  foreignField: 'codeAgent',
-                  as: 'agent',
-                },
-              },
-              { $unwind: '$agent' },
-              { $unwind: '$zone' },
-            ])
-              .then((response) => {
-                if (response) {
-                  return res.status(200).json(response[0])
-                } else {
-                  return res.status(400).json('Erreur 4')
-                }
-              })
-              .catch(function (err) {
-                console.log(err)
-              })
+           return res.status(200).json(result.idDemande)
           } else {
             return res.status(400).json(result)
           }

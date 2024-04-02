@@ -36,6 +36,7 @@ const {
   Reclamation,
   ReadMessage,
   DeleteReclamation,
+  demandeIncorrect,
 } = require("../Controllers/Reclamation");
 const { readPeriodeGroup, demandePourChaquePeriode,searchPaquet, chercherUneDemande } = require("../Controllers/Statistique");
 
@@ -143,5 +144,6 @@ router.get("/idDemande/:id",protect, chercherUneDemande)
 //Actions
 router.post("/action", AddAction, ReadAction)
 router.get("/action", ReadAction)
+router.get("/demandeIncorrect", protect, demandeIncorrect)
 
 module.exports = router;
