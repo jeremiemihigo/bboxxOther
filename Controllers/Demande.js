@@ -381,7 +381,6 @@ module.exports = {
           
         ])
         .then((response) => {
-          console.log(response)
           if (response) {
             return res.status(200).json(response.reverse())
           }
