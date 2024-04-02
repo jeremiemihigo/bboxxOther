@@ -6,6 +6,7 @@ const _ = require('lodash')
 const ModelPeriode = require('../Models/Periode')
 const { dateActuelle } = require('../Static/Static_Function')
 const modelAction = require('../Models/Actions')
+const dayjs = require("dayjs")
 
 module.exports = {
   reponse: (req, res) => {
@@ -129,9 +130,9 @@ module.exports = {
               if(result.length > 0){
                 const doublon = result.filter(x=>x.agent.fonction === demande[0].agent.fonction)
                 if(doublon.length > 0){
-                  done(`Ce client a été visiter le ${dateActuelle(
+                  done(`Ce client a été visiter le ${dayjs(
                     doublon[0]?.demande.createdAt,
-                  )} par ${doublon[0].agent.nom} code : ${doublon[0].agent.codeAgent}`)
+                  ).format("dd/mm/yyyy")} par ${doublon[0].agent.nom} code : ${doublon[0].agent.codeAgent} à ${dayjs(doublon[0]?.demande.createdAt).format("hh:mm:ss")} `)
                 }else{
                   done(null, periode, demande, agent)
                 }
