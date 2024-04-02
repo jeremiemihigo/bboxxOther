@@ -461,6 +461,7 @@ module.exports = {
               },
             ])
             .then((response) => {
+            
               if (response) {
                 done(null, response)
               }
@@ -486,6 +487,14 @@ module.exports = {
                   localField: 'code',
                   foreignField: '_id',
                   as: 'reponseId',
+                },
+              },
+              {
+                $lookup: {
+                  from: 'agentadmins',
+                  localField: 'codeAgent',
+                  foreignField: 'codeAgent',
+                  as: 'agentadmin',
                 },
               },
               

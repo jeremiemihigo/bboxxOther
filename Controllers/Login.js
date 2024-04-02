@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
   }
 }
 
-exports.resetPassword = (req, res) => {
+exports.resetPassword = (req, res, next) => {
   try {
     const { id } = req.body
     asyncLab.waterfall(
@@ -66,7 +66,8 @@ exports.resetPassword = (req, res) => {
       ],
       function (response) {
         if (response) {
-          return res.status(200).json('Opération effectuée')
+          req.recherche = id
+          next()
         }
       },
     )

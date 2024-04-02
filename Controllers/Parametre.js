@@ -65,7 +65,7 @@ module.exports = {
   },
   PeriodeDemande: (req, res, next) => {
     next();
-    if (new Date().getDate() >= 1 && new Date().getDate() <= 3) {
+    if (new Date().getDate() >= 4 && new Date().getDate() <= 3) {
       const toDay = new Date();
       const periode = `${
         toDay.getMonth() + 1 < 10

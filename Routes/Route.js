@@ -87,7 +87,7 @@ router.post("/reclamation", Reclamation, ReadMessage);
 router.put("/zone", AffecterZone);
 router.put("/reponse", updateReponse);
 router.put("/bloquer", BloquerAgent, ReadAgent);
-router.put("/reset", resetPassword);
+router.put("/reset", resetPassword, ReadAgent);
 router.delete("/deleteReclamation/:id", DeleteReclamation);
 router.put("/agent", UpdateAgent, ReadAgent);
 router.post("/manyAgent", InsertManyAgent)
