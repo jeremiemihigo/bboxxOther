@@ -68,25 +68,27 @@ module.exports = {
         function (periode, lot, reponse, done) {
           let table = []
           for (let i = 0; i < lot.length; i++) {
-            table.push({
-              _id: lot[i],
-              active : lot[i] === periode.periode ? true : false,
-              attente : reponse.filter(
-                (x) => x.lot === lot[i] && x.reponse.length < 1 && x.conversation.length < 1,
-              ),
-
-              nConforme : reponse.filter(
-                (x) => x.lot === lot[i] && x.reponse.length === 0 && x.conversation.length > 0 ,
-              ),
-
-              valide :reponse.filter(
-                (x) => x.lot === lot[i] && x.reponse.length > 0,
-              ),
-              allData :reponse.filter(
-                (x) => x.lot === lot[i]
-              ),
-              
-            })
+            if(lot[i] === periode.periode){
+              table.push({
+                _id: lot[i],
+                active : lot[i] === periode.periode ? true : false,
+                attente : reponse.filter(
+                  (x) => x.lot === lot[i] && x.reponse.length < 1 && x.conversation.length < 1,
+                ),
+  
+                nConforme : reponse.filter(
+                  (x) => x.lot === lot[i] && x.reponse.length === 0 && x.conversation.length > 0 ,
+                ),
+                valide :reponse.filter(
+                  (x) => x.lot === lot[i] && x.reponse.length > 0,
+                ),
+                allData :reponse.filter(
+                  (x) => x.lot === lot[i]
+                ),
+                
+              })
+            }
+            
           }
           res.status(200).json(table)
         },
