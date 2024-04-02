@@ -7,6 +7,7 @@ const ModelPeriode = require('../Models/Periode')
 const { dateActuelle } = require('../Static/Static_Function')
 const modelAction = require('../Models/Actions')
 const dayjs = require("dayjs")
+const Reclamation = require("../Models/Reclamation")
 
 module.exports = {
   reponse: (req, res) => {
@@ -162,7 +163,7 @@ module.exports = {
             })
               .then((response) => {
                 if (response) {
-                  done(null, response)
+                  done(null,demande, response)
                 } else {
                   done("Erreur d'enregistrement")
                 }
@@ -172,22 +173,30 @@ module.exports = {
                 done('Erreur 2')
               })
           },
-          function (reponse, done) {
-            const table = ['defaulted', 'expired']
-            if (table.includes(reponse.PayementStatut)) {
-              modelAction
-                .create({
-                  idReponse: reponse._id,
-                  action : "undefined"
-                })
-                .then((actions) => {
-                  if (actions) {
-                    done(reponse)
-                  }
-                })
-            }else{
+          function (demande, reponse, done) {
+            // const table = ['defaulted', 'expired']
+            // if (table.includes(reponse.PayementStatut)) {
+            //   modelAction
+            //     .create({
+            //       idReponse: reponse._id,
+            //       action : "undefined"
+            //     })
+            //     .then((actions) => {
+            //       if (actions) {
+            //         done(reponse)
+            //       }
+            //     })
+            // }else{
+            //   done(reponse)
+            // }
+           try {
+            Reclamation.deleteMany( {code : demande._id} ).then(deleted=>{
+              console.log(deleted)
               done(reponse)
-            }
+            }).catch(function(err){});
+           } catch (error) {
+           }
+           
           },
         ],
         function (result) {
