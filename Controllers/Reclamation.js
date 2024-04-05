@@ -181,6 +181,17 @@ module.exports = {
                 {
                   $unwind: '$agent',
                 },
+                {
+                  $lookup: {
+                    from: 'shops',
+                    localField: 'agent.idShop',
+                    foreignField: 'idShop',
+                    as: 'shopAgent',
+                  },
+                },
+                {
+                  $unwind: '$shopAgent',
+                },
               ])
               .then((result) => {
                 done(result)

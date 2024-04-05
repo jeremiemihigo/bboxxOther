@@ -122,7 +122,7 @@ router.get("/reponseAll",  ReponseDemandeLot)
 const { AddRaison, ReadRaison,Ajuster, UpdateRaison } = require("../Controllers/Raison");
 const { AddAdminAgent, ResetPasswords, ReadAgentAdmin, BloquerAgentAdmin } = require("../Controllers/AgentAdmin");
 const { AddShop, ReadShop, UpdateOneField } = require("../Controllers/Shop");
-const { AddAction, ReadAction } = require("../Controllers/Action");
+const { AddAction } = require("../Controllers/Action");
 router.post("/ajuster", Ajuster)
 router.post("/raison", AddRaison)
 router.get("/raison", ReadRaison)
@@ -142,8 +142,7 @@ router.put("/updateDemande",upload.single("file"), updateDemandeAgent)
 router.get("/idDemande/:id",protect, chercherUneDemande)
 
 //Actions
-router.post("/action", AddAction, ReadAction)
-router.get("/action", ReadAction)
+router.post("/action", AddAction)
 router.get("/demandeIncorrect", protect, demandeIncorrect)
 
 module.exports = router;

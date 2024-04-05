@@ -1,40 +1,38 @@
 const { ObjectId } = require('mongodb')
-const modelAction = require('../Models/Actions')
+const modelReponse = require('../Models/Reponse')
 const asyncLab = require('async')
 
 module.exports = {
-  AddAction: (req, res, next) => {
+  AddAction: (req, res) => {
     try {
-      const { idReponse, text, action } = req.body
-      if (!idReponse) {
+      const { idReponse, text } = req.body
+     
+      if (!idReponse || !text) {
         return res.status(201).json('Erreur')
       }
 
       asyncLab.waterfall(
         [
           function (done) {
-            modelAction
-              .findOne({ idReponse })
+            modelReponse
+              .findOne({ _id : new ObjectId(idReponse) })
               .then((response) => {
                 if (response) {
-                  return res
-                    .status(201)
-                    .json("Vous avez deja demandé l'action à cette demande")
-                } else {
                   done(null, response)
+                } else {
                 }
               })
               .catch(function (err) {
                 console.log(err)
               })
           },
-          function (actions, done) {
-            modelAction
-              .create({
-                idReponse,
-                text,
-                action,
-              })
+          function (reponse, done) {
+            modelReponse
+              .findByIdAndUpdate(
+                reponse._id,
+                { $set: { action: text } },
+                { new: true },
+              )
               .then((actionCreate) => {
                 done(actionCreate)
               })
@@ -45,64 +43,12 @@ module.exports = {
         ],
         function (result) {
           if (result) {
-            req.recherche = result._id
-            next()
+            return res.status(200).json(result)
           } else {
             return res.status(201).json('Erreur')
           }
         },
       )
-    } catch (error) {
-      console.log(error)
-    }
-  },
-  ReadAction: (req, res) => {
-    try {
-      const recherche = req.recherche
-      let match = recherche
-        ? { $match: { _id: new ObjectId(recherche) } }
-        : { $match: {} }
-
-      modelAction.aggregate([
-        match,
-        {
-          $lookup: {
-            from: 'reponses',
-            localField: 'idReponse',
-            foreignField: '_id',
-            as: 'reponse',
-          },
-        },
-        { $unwind: '$reponse' },
-        {
-          $lookup : {
-            from:"demandes",
-            localField:"reponse.idDemande",
-            foreignField:"idDemande",
-            as :"demande"
-          }
-        },
-        {
-          $unwind:"$demande"
-        },
-       
-        {
-          $lookup : {
-            from:"agents",
-            localField:"demande.codeAgent",
-            foreignField:"codeAgent",
-            as:"agentTerrain"
-          }
-        },
-        {
-          $unwind:"$agentTerrain"
-        },
-      ]).then(result=>{
-        if(result.length > 0){
-          let data = recherche ? result[0] : result
-          return res.status(200).json(data)
-        }
-      })
     } catch (error) {
       console.log(error)
     }

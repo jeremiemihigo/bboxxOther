@@ -20,10 +20,8 @@ module.exports = {
       if (!decoded?.id) {
         return res.status(201).json('token expired')
       }
-console.log(decoded)
       Model_Agent.findById(decoded.id)
       .then((response) => {
-        console.log(response)
         if (response) {
           req.user = response
           next()
