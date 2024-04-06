@@ -134,9 +134,9 @@ module.exports = {
                   if (
                     doublon[0].demande.codeAgent === demande[0].agent.codeAgent
                   ) {
-                    done(`Vous avez visité le client <<${
+                    done(`Vous avez visité le client ${
                       doublon[0]?.codeclient
-                    }>> le ${dayjs(demande[0].createdAt).format('DD/MM/YYYY')}
+                    } le ${dayjs(demande[0].createdAt).format('DD/MM/YYYY')}
                     pour plus de confirmations, veuillez vérifier dans vos visites conformes
                     `)
                   } else {

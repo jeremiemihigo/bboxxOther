@@ -201,7 +201,7 @@ module.exports = {
         function (result) {
           try {
             if (result.length > 0) {
-              return res.status(200).json(result)
+              return res.status(200).json(result.reverse())
             } else {
               return res.status(201).json('Erreur')
             }
