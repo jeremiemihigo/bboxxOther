@@ -19,11 +19,9 @@ const port = process.env.PORT || 5000;
 
 const bboxx = require("./Routes/Route");
 const conge = require("./Routes/Conge")
-const formation = require("./Routes/Formation")
 app.use(PeriodeDemande);
 app.use("/bboxx/support", bboxx);
 app.use("/admin/conge", conge);
-app.use("/formation", formation)
 app.use("/bboxx/image", express.static(path.resolve(__dirname, "Images")));
 
 // Middleware

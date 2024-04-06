@@ -4,8 +4,8 @@ const ModelDemande = require('../Models/Demande')
 const ModelAgentAdmin = require('../Models/AgentAdmin')
 const _ = require('lodash')
 const ModelPeriode = require('../Models/Periode')
-const dayjs = require("dayjs")
-const Reclamation = require("../Models/Reclamation")
+const dayjs = require('dayjs')
+const Reclamation = require('../Models/Reclamation')
 
 module.exports = {
   reponse: (req, res) => {
@@ -126,17 +126,34 @@ module.exports = {
                 },
               },
             ]).then((result) => {
-              if(result.length > 0){
-                const doublon = result.filter(x=>x.agent.fonction === demande[0].agent.fonction)
-                if(doublon.length > 0){
-                  done(`Ce client a été visiter le ${dayjs(
-                    doublon[0]?.demande.createdAt,
-                  ).format("DD/MM/YYYY")} par ${doublon[0].agent.nom} code : ${doublon[0].agent.codeAgent} à ${dayjs(doublon[0]?.createdAt).format("hh:mm:ss")} `)
-                }else{
+              if (result.length > 0) {
+                const doublon = result.filter(
+                  (x) => x.agent.fonction === demande[0].agent.fonction,
+                )
+                if (doublon.length > 0) {
+                  if (
+                    doublon[0].demande.codeAgent === demande[0].agent.codeAgent
+                  ) {
+                    done(`Vous avez visité le client <<${
+                      doublon[0]?.codeclient
+                    }>> le ${dayjs(demande[0].createdAt).format('DD/MM/YYYY')}
+                    pour plus de confirmations, veuillez vérifier dans vos visites conformes
+                    `)
+                  } else {
+                    done(
+                      `Ce client a été visiter le ${dayjs(
+                        doublon[0]?.demande.createdAt,
+                      ).format('DD/MM/YYYY')} par ${
+                        doublon[0].agent.nom
+                      } code : ${doublon[0].agent.codeAgent} à ${dayjs(
+                        doublon[0]?.createdAt,
+                      ).format('hh:mm:ss')} `,
+                    )
+                  }
+                } else {
                   done(null, periode, demande, agent)
                 }
-              }
-               else {
+              } else {
                 done(null, periode, demande, agent)
               }
             })
@@ -161,7 +178,7 @@ module.exports = {
             })
               .then((response) => {
                 if (response) {
-                  done(null,demande, response)
+                  done(null, demande, response)
                 } else {
                   done("Erreur d'enregistrement")
                 }
@@ -171,18 +188,18 @@ module.exports = {
               })
           },
           function (demande, reponse, done) {
-           try {
-            Reclamation.deleteMany( {code : demande._id} ).then(deleted=>{
-              done(reponse)
-            }).catch(function(err){});
-           } catch (error) {
-           }
-           
+            try {
+              Reclamation.deleteMany({ code: demande._id })
+                .then((deleted) => {
+                  done(reponse)
+                })
+                .catch(function (err) {})
+            } catch (error) {}
           },
         ],
         function (result) {
           if (result.idDemande) {
-           return res.status(200).json(result.idDemande)
+            return res.status(200).json(result.idDemande)
           } else {
             return res.status(400).json(result)
           }
