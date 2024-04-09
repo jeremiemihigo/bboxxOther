@@ -6,7 +6,8 @@ const schema = new mongoose.Schema(
     shop: { type: String, required: true, trim:true, unique:true },
     adresse: { type: String, required: false, trim: true },
     idZone: { type: String, required: true },
-    idShop : {type:String, required:true, unique:true}
+    idShop : {type:String, required:true, unique:true},
+    tickets : {type:Array, required:false}
   },
   { timestamps: true },
 )

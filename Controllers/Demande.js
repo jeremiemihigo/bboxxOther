@@ -4,9 +4,9 @@ const modelReponse = require('../Models/Reponse')
 const modelAgentAdmin = require('../Models/Agent')
 const asyncLab = require('async')
 const { generateNumber } = require('../Static/Static_Function')
-const modelReclamation = require('../Models/Reclamation')
 const { ObjectId } = require('mongodb')
 const modelShop = require("../Models/Shop")
+const dayjs = require("dayjs")
 
 module.exports = {
   demande: (req, res) => {
@@ -287,13 +287,26 @@ module.exports = {
   },
   lectureDemandeBd: (req, res) => {
     try {
-      const { body } = req
+      const { data, debut, fin } = req.body
+      console.log(debut, fin)
       let match = {
-        $match: body,
+        $match: data,
       }
+      const finDate = new Date(fin)
+
+      finDate.setDate(finDate.getDate() + 1)
+
       modelDemande
         .aggregate([
           match,
+          {
+            $match: {
+              createdAt: {
+                $gte: new Date(debut),
+                $lte: finDate,
+              },
+            },
+          },
           {
             $lookup: {
               from: 'reponses',

@@ -121,7 +121,7 @@ router.get("/reponseAll",  ReponseDemandeLot)
 //Raison
 const { AddRaison, ReadRaison,Ajuster, UpdateRaison } = require("../Controllers/Raison");
 const { AddAdminAgent, ResetPasswords, ReadAgentAdmin, BloquerAgentAdmin } = require("../Controllers/AgentAdmin");
-const { AddShop, ReadShop, UpdateOneField } = require("../Controllers/Shop");
+const { AddShop, ReadShop, UpdateOneField, AddResponsable } = require("../Controllers/Shop");
 const { AddAction } = require("../Controllers/Action");
 router.post("/ajuster", Ajuster)
 router.post("/raison", AddRaison)
@@ -132,6 +132,7 @@ router.put("/raison", UpdateRaison)
 router.post("/shop", AddShop, ReadShop)
 router.get("/shop", ReadShop)
 router.put("/shop", UpdateOneField)
+router.put("/responsableTicket", protect, AddResponsable, ReadShop)
 
 //Agent
 router.post("/addAdminAgent", AddAdminAgent)
