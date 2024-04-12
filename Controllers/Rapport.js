@@ -6,7 +6,7 @@ const modelPeriode = require('../Models/Periode')
 module.exports = {
   Rapport: (req, res) => {
     try {
-      const { debut, fin } = req.body
+      const { debut, fin, shop } = req.body
 
       if (!debut || !fin) {
         return res
@@ -130,8 +130,12 @@ module.exports = {
             unwindRegion,
             lookAction,
             project,
-            sort,
-          ]).then((response) => {
+            {
+              $match : {"shop.idShop" : shop}
+            }
+            // sort,
+          ], {allowDiskUse: true}).then((response) => {
+           
             return res.status(200).json(response.reverse())
           })
         },
