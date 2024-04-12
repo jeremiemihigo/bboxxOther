@@ -12,7 +12,7 @@ connectDB();
 const { PeriodeDemande } = require("./Controllers/Parametre");
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true, limit: "500mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 const port = process.env.PORT || 5000;
 
