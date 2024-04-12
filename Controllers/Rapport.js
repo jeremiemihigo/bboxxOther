@@ -130,8 +130,7 @@ module.exports = {
             unwindRegion,
             lookAction,
             project,
-            sort,
-          ]).then((response) => {
+          ], {allowDiskUse: true}).then((response) => {
             return res.status(200).json(response.reverse())
           })
         },
