@@ -62,6 +62,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 //Read
 const { ReadUser, readUserAdmin } = require("../Controllers/Read");
+const {Doublon} = require("../Controllers/Doublon")
 
 router.get("/zone", ReadZone);
 router.get("/agent", ReadAgent);
@@ -82,7 +83,7 @@ router.get("/oneReponse/:id", OneReponse);
 router.post("/paramatre", Parametre);
 router.post("/postzone", Zone);
 router.post("/postAgent", AddAgent, ReadAgent);
-router.post("/reponsedemande", reponse);
+router.post("/reponsedemande", reponse, Doublon);
 router.post("/reclamation", Reclamation, ReadMessage);
 //Update
 router.put("/zone", AffecterZone);

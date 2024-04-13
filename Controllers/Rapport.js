@@ -116,26 +116,28 @@ module.exports = {
 
       asyncLab.waterfall([
         function (done) {
-          ModelReponse.aggregate([
-            matches,
-            lookDemande,
-            unwindDemande,
-            lookDemandeur,
-            lookAgent,
-            unwindDemandeur,
-            unwindagent,
-            lookRegion,
-            lookShop,
-            unwindShop,
-            unwindRegion,
-            lookAction,
-            project,
-            {
-              $match : {"shop.idShop" : shop}
-            }
-            // sort,
-          ], {allowDiskUse: true}).then((response) => {
-           
+          ModelReponse.aggregate(
+            [
+              matches,
+              lookDemande,
+              unwindDemande,
+              lookDemandeur,
+              lookAgent,
+              unwindDemandeur,
+              unwindagent,
+              lookRegion,
+              lookShop,
+              unwindShop,
+              unwindRegion,
+              lookAction,
+              project,
+              {
+                $match: { 'shop.idShop': shop },
+              },
+              // sort,
+            ],
+            { allowDiskUse: true },
+          ).then((response) => {
             return res.status(200).json(response.reverse())
           })
         },

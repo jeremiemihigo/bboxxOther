@@ -6,55 +6,73 @@ const asyncLab = require('async')
 module.exports = {
   Doublon: (req, res) => {
     try {
-      const {
-        codeclient,
-        precedent,
-        present,
-        agentCo,
-        message,
-        _idDemande,
-        idDemande,
-      } = req.recherche
-      asyncLab.waterfall(
-        [
-          function (done) {
-            modelDoublon
-              .create({
-                codeclient,
-                precedent,
-                present,
-              })
-              .then((response) => {
-                if (response) {
-                  done(null, response)
-                }
-              })
-              .catch(function (err) {
-                console.log(err)
-              })
+      if (!req.recherche.present) {
+        const { message, idDemande, agentCo, _idDemande } = req.recherche
+        modelConversation
+          .create({
+            message,
+            codeAgent: agentCo,
+            sender: 'co',
+            code: new ObjectId(_idDemande),
+          })
+          .then((response) => {
+            if (response) {
+              return res.status(200).json(idDemande)
+            }
+          })
+          .catch(function (err) {
+            console.log(err)
+          })
+      } else {
+        const {
+          codeclient,
+          precedent,
+          present,
+          agentCo,
+          message,
+          _idDemande,
+        } = req.recherche
+        asyncLab.waterfall(
+          [
+            function (done) {
+              modelDoublon
+                .create({
+                  codeclient,
+                  precedent,
+                  present,
+                })
+                .then((response) => {
+                  if (response) {
+                    done(null, response)
+                  }
+                })
+                .catch(function (err) {
+                  console.log(err)
+                })
+            },
+            function (result, done) {
+              modelConversation
+                .create({
+                  message: message,
+                  codeAgent: agentCo,
+                  sender: 'co',
+                  code: new ObjectId(_idDemande),
+                })
+                .then((response) => {
+                  if (response) {
+                    done(response)
+                  }
+                })
+            },
+          ],
+          function (response) {
+            if (response) {
+              return res.status(200).json(present)
+            } else {
+            }
           },
-          function (result, done) {
-            modelConversation
-              .create({
-                message: message,
-                codeAgent: agentCo,
-                sender: 'co',
-                code: new ObjectId(_idDemande),
-              })
-              .then((response) => {
-                if (response) {
-                  done(response)
-                }
-              })
-          },
-        ],
-        function (response) {
-          if (response) {
-            return res.status(200).json(idDemande)
-          } else {
-          }
-        },
-      )
+        )
+      }
     } catch (error) {
       console.log(error)
     }
@@ -91,7 +109,7 @@ module.exports = {
             as: 'agentPrecedent',
           },
         },
-        {$unwind:"$agentPrecedent"},
+        { $unwind: '$agentPrecedent' },
         //Look agent present
         {
           $lookup: {
@@ -102,8 +120,8 @@ module.exports = {
           },
         },
         {
-          $unwind:"$agentPresent"
-        }
+          $unwind: '$agentPresent',
+        },
       ])
     } catch (error) {
       console.log(error)
