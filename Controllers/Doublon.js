@@ -13,7 +13,7 @@ module.exports = {
         modelDemande
           .findOneAndUpdate(
             { idDemande },
-            { $set: { double: { codeAgent: agentCo, valeur: doublon } } },
+            { $set: { double: { codeAgent: agentCo, valeur: doublon }, feedback:"chat" } },
             { new: true },
           )
 
@@ -220,7 +220,7 @@ module.exports = {
                     lot: periode.periode,
                     valide: false,
                     feedback: 'chat',
-                    double: { $exists: 0 },
+                    double: { $exists: false },
                     [dataTosearch.key]: dataTosearch.value,
                   },
                 }

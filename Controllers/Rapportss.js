@@ -2,36 +2,142 @@ const ModelReponse = require('../Models/Reponse')
 const asyncLab = require('async')
 const _ = require('lodash')
 const modelPeriode = require('../Models/Periode')
-const modelDemande = require("../Models/Demande")
-const modelRapport = require("../Models/Rapport")
 
 module.exports = {
   Rapport: (req, res) => {
     try {
-      const { debut, fin, dataTosearch } = req.body
+      const { debut, fin, shop } = req.body
 
       if (!debut || !fin) {
         return res
           .status(200)
           .json({ error: true, message: 'Veuillez renseigner les dates' })
       }
-      let match = dataTosearch
-      ? 
-      {dateSave: {
-        $gte: new Date(debut),
-        $lte: new Date(fin),
-      },
-      [dataTosearch.key]: dataTosearch.value,
-    }
+      let matches = {
+        $match: {
+          dateSave: {
+            $gte: new Date(debut),
+            $lte: new Date(fin),
+          },
+        },
+      }
+      let lookAgent = {
+        $lookup: {
+          from: 'agentadmins',
+          localField: 'codeAgent',
+          foreignField: 'codeAgent',
+          as: 'agent',
+        },
+      }
+      let lookDemande = {
+        $lookup: {
+          from: 'demandes',
+          localField: 'idDemande',
+          foreignField: 'idDemande',
+          as: 'demande',
+        },
+      }
 
-      : {dateSave: {
-        $gte: new Date(debut),
-        $lte: new Date(fin),
-      }}
-      console.log(match)
+      let unwindDemande = { $unwind: '$demande' }
+      let unwindDemandeur = { $unwind: '$demandeur' }
+      let unwindagent = { $unwind: '$agent' }
+      let lookDemandeur = {
+        $lookup: {
+          from: 'agents',
+          localField: 'demande.codeAgent',
+          foreignField: 'codeAgent',
+          as: 'demandeur',
+        },
+      }
+
+      let project = {
+        $project: {
+          codeclient: 1,
+          codeCu: 1,
+          clientStatut: 1,
+          PayementStatut: 1,
+          consExpDays: 1,
+          'demandeur.nom': 1,
+          'demandeur.codeAgent': 1,
+          'demandeur.fonction': 1,
+          'agent.nom': 1,
+          'demande.typeImage': 1,
+          'demande.createAt': 1,
+          'demande.numero': 1,
+          'demande.commune': 1,
+          'demande.updatedAt': 1,
+          createdAt: 1,
+          updatedAt: 1,
+          'demande.coordonnes': 1,
+          'demande.statut': 1,
+          'demande.sector': 1,
+          'demande.lot': 1,
+          'demande.cell': 1,
+          'demande.reference': 1,
+          'demande.sat': 1,
+          'demande.createdAt': 1,
+          'demande.raison': 1,
+          nomClient: 1,
+          action: 1,
+          shop: 1,
+          region: 1,
+        },
+      }
+      let sort = {
+        $sort: { createdAt: -1 },
+      }
+      let lookRegion = {
+        $lookup: {
+          from: 'zones',
+          localField: 'idZone',
+          foreignField: 'idZone',
+          as: 'region',
+        },
+      }
+      let lookShop = {
+        $lookup: {
+          from: 'shops',
+          localField: 'idShop',
+          foreignField: 'idShop',
+          as: 'shop',
+        },
+      }
+      let unwindShop = { $unwind: '$shop' }
+      let unwindRegion = { $unwind: '$region' }
+
+      let lookAction = {
+        $lookup: {
+          from: 'actions',
+          localField: '_id',
+          foreignField: 'idReponse',
+          as: 'action',
+        },
+      }
+
       asyncLab.waterfall([
         function (done) {
-          modelRapport.find(match).lean().then((response) => {
+          ModelReponse.aggregate(
+            [
+              matches,
+              lookDemande,
+              unwindDemande,
+              lookDemandeur,
+              lookAgent,
+              unwindDemandeur,
+              unwindagent,
+              lookRegion,
+              lookShop,
+              unwindShop,
+              unwindRegion,
+              lookAction,
+              project,
+              // {
+              //   $match: { 'shop.idShop': shop },
+              // },
+              // sort,
+            ],
+            { allowDiskUse: true },
+          ).then((response) => {
             return res.status(200).json(response.reverse())
           })
         },
@@ -150,6 +256,5 @@ module.exports = {
       console.log(error)
     }
   },
-
-  
 }
+

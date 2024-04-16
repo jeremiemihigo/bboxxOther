@@ -288,7 +288,6 @@ module.exports = {
   lectureDemandeBd: (req, res) => {
     try {
       const { data, debut, fin } = req.body
-      console.log(debut, fin)
       let match = {
         $match: data,
       }
@@ -309,7 +308,7 @@ module.exports = {
           },
           {
             $lookup: {
-              from: 'reponses',
+              from: 'rapports',
               localField: 'idDemande',
               foreignField: 'idDemande',
               as: 'reponse',
@@ -425,7 +424,8 @@ module.exports = {
                 $match: {
                   valide: false,
                   lot: periode.periode,
-                  feedback:"new"
+                  feedback:"new",
+                  double : {$exists : false}
                 },
               },
               {

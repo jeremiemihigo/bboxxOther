@@ -43,6 +43,7 @@ const {
   OneReponse,
   updateReponse,
   ReponseDemandeLot,
+  reponseChangeStatus,
 } = require('../Controllers/Reponse')
 const { Rapport, StatZone } = require('../Controllers/Rapport')
 const {
@@ -53,8 +54,7 @@ const {
 } = require('../Controllers/Reclamation')
 const {
   readPeriodeGroup,
-  demandePourChaquePeriode,
-  searchPaquet,
+  // searchPaquet,
   chercherUneDemande,
 } = require('../Controllers/Statistique')
 
@@ -126,9 +126,8 @@ router.post('/loginUserAdmin', LoginAgentAdmin)
 //Lien après presentation du systeme
 router.get('/demandeAll/:lot/:codeAgent', lectureDemandeMobile)
 router.get('/paquet', protectTech, readPeriodeGroup)
-router.get('/lot', searchPaquet)
+// router.get('/lot', searchPaquet)
 router.get('/periodeActive', ReadPeriodeActive)
-router.get('/demandePourChaquePeriode', demandePourChaquePeriode)
 router.get('/statZone', StatZone)
 router.delete('/deleteParams', deleteParams)
 
@@ -192,4 +191,6 @@ router.post('/departement', AddDepartement)
 router.get('/permission', ReadPermission)
 router.get('/departement', ReadDepartement)
 router.put("/addTache", AddTache)
+
+router.get("/changeStatus", reponseChangeStatus)
 module.exports = router
