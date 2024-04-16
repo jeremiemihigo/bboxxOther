@@ -28,7 +28,6 @@ module.exports = {
         $gte: new Date(debut),
         $lte: new Date(fin),
       }}
-      console.log(match)
       asyncLab.waterfall([
         function (done) {
           modelRapport.find(match).lean().then((response) => {

@@ -5,8 +5,8 @@ const modelAgentAdmin = require('../Models/Agent')
 const asyncLab = require('async')
 const { generateNumber } = require('../Static/Static_Function')
 const { ObjectId } = require('mongodb')
-const modelShop = require("../Models/Shop")
-const dayjs = require("dayjs")
+const modelShop = require('../Models/Shop')
+const modelRapport = require('../Models/Rapport')
 
 module.exports = {
   demande: (req, res) => {
@@ -14,7 +14,8 @@ module.exports = {
       //   const { codeAgent, codeZone,} = req.user
       const {
         codeclient,
-        typeImage,idShop,
+        typeImage,
+        idShop,
         codeAgent,
         codeZone,
         commune,
@@ -45,7 +46,8 @@ module.exports = {
         !sector ||
         !cell ||
         !reference ||
-        !sat || !idShop
+        !sat ||
+        !idShop
       ) {
         return res.status(201).json('Veuillez renseigner les champs')
       }
@@ -59,6 +61,7 @@ module.exports = {
           function (done) {
             modelAgentAdmin
               .findOne({ codeAgent, active: true })
+              .lean()
               .then((agentFound) => {
                 if (agentFound) {
                   done(null, agentFound)
@@ -74,6 +77,7 @@ module.exports = {
           function (agent, done) {
             modelDemande
               .findOne({ idDemande })
+              .lean()
               .then((response) => {
                 if (response) {
                   return res.status(201).json('Veuillez relancer la demande')
@@ -87,7 +91,8 @@ module.exports = {
           },
           function (agent, done) {
             ModelPeriode.findOne({})
-              .limit(1)
+              .lean()
+
               .then((response) => {
                 if (response) {
                   done(null, agent, response)
@@ -99,23 +104,8 @@ module.exports = {
                 return res.status(201).json('Erreur')
               })
           },
-          function(agent, response, done){
-            modelShop.findOne({idShop}).then(shop=>{
-              if(shop){
-                done(null, agent, response, shop,)
-              }else{
-                return res.status(201).json("Shop est introuvable")
-              }
-            }).catch(function (err) {
-              if (err.message) {
-                return res.status(201).json('' + err.message)
-              } else {
-                return res.status(201).json('Erreur')
-              }
-            })
-          },
 
-          function (agent, periode, shop, done) {
+          function (agent, periode, done) {
             modelDemande
               .create({
                 codeAgent: agent.codeAgent,
@@ -123,13 +113,14 @@ module.exports = {
                 typeImage,
                 coordonnes: { latitude, altitude, longitude },
                 statut,
-                raison : raison === "undefined" ?"" : raison,
+                raison: raison === 'undefined' ? '' : raison,
                 codeclient,
                 lot: periode.periode,
                 idDemande,
                 sector,
                 cell,
-                reference,idShop:shop.idShop,
+                reference,
+                idShop: agent.idShop,
                 sat,
                 file: filename,
                 commune,
@@ -204,6 +195,7 @@ module.exports = {
       asyncLab.waterfall([
         function (done) {
           ModelPeriode.findOne({})
+            .lean()
             .then((periode) => {
               if (periode) {
                 done(null, periode)
@@ -216,30 +208,9 @@ module.exports = {
             })
         },
         function (periode, done) {
-          modelReponse
-            .aggregate([
-              
-              {
-                $lookup: {
-                  from: 'agentadmins',
-                  localField: 'codeAgent',
-                  foreignField: 'codeAgent',
-                  as: 'agent',
-                },
-              },
-              {
-                $lookup: {
-                  from: 'demandes',
-                  localField: 'idDemande',
-                  foreignField: 'idDemande',
-                  as: 'demande',
-                },
-              },
-           
-              { $unwind: '$agent' },
-              { $unwind: '$demande' },
-              { $match : {"demande.lot" : periode.periode} },
-            ])
+          modelRapport
+            .find({ 'demande.lot': periode.periode })
+            .lean()
             .then((response) => {
               return res.status(200).json(response)
             })
@@ -390,7 +361,6 @@ module.exports = {
           {
             $unwind: '$agent',
           },
-          
         ])
         .then((response) => {
           if (response) {
@@ -403,93 +373,93 @@ module.exports = {
   },
   ToutesDemandeAttente: (req, res) => {
     try {
-      asyncLab.waterfall([
-        function (done) {
-          ModelPeriode.findOne({})
-            .then((periode) => {
-              if (periode) {
-                done(null, periode)
-              } else {
-                return res.status(200).json([])
-              }
-            })
-            .catch(function (err) {
-              console.log(err)
-            })
-        },
-        function (periode, done) {
-          modelDemande
-            .aggregate([
-              {
-                $match: {
-                  valide: false,
-                  lot: periode.periode,
-                  feedback:"new",
-                  double : {$exists : false}
+      asyncLab.waterfall(
+        [
+          function (done) {
+            ModelPeriode.findOne({})
+              .lean()
+              .then((periode) => {
+                if (periode) {
+                  done(null, periode)
+                } else {
+                  return res.status(200).json([])
+                }
+              })
+              .catch(function (err) {
+                console.log(err)
+              })
+          },
+          function (periode, done) {
+            modelDemande
+              .aggregate([
+                {
+                  $match: {
+                    valide: false,
+                    lot: periode.periode,
+                    feedback: 'new',
+                  },
                 },
-              },
-              {
-                $lookup: {
-                  from: 'agents',
-                  localField: 'codeAgent',
-                  foreignField: 'codeAgent',
-                  as: 'agent',
+                {
+                  $lookup: {
+                    from: 'agents',
+                    localField: 'codeAgent',
+                    foreignField: 'codeAgent',
+                    as: 'agent',
+                  },
                 },
-              },
 
-              {
-                $lookup: {
-                  from: 'zones',
-                  localField: 'codeZone',
-                  foreignField: 'idZone',
-                  as: 'zone',
+                {
+                  $lookup: {
+                    from: 'zones',
+                    localField: 'codeZone',
+                    foreignField: 'idZone',
+                    as: 'zone',
+                  },
                 },
-              },
-              {
-                $lookup: {
-                  from: 'reponses',
-                  localField: 'idDemande',
-                  foreignField: 'idDemande',
-                  as: 'reponse',
+                {
+                  $lookup: {
+                    from: 'reponses',
+                    localField: 'idDemande',
+                    foreignField: 'idDemande',
+                    as: 'reponse',
+                  },
                 },
-              },
-               { $unwind: '$agent' },
-               { $unwind: '$zone' },
-               {
-                $lookup: {
-                  from: 'shops',
-                  localField: 'agent.idShop',
-                  foreignField: 'idShop',
-                  as: 'shopAgent',
+                { $unwind: '$agent' },
+                { $unwind: '$zone' },
+                {
+                  $lookup: {
+                    from: 'shops',
+                    localField: 'agent.idShop',
+                    foreignField: 'idShop',
+                    as: 'shopAgent',
+                  },
                 },
-              },
-              { $unwind: '$shopAgent' },
-              {
-                $lookup: {
-                  from: 'conversations',
-                  localField: '_id',
-                  foreignField: 'code',
-                  as: 'conversation',
+                { $unwind: '$shopAgent' },
+                {
+                  $lookup: {
+                    from: 'conversations',
+                    localField: '_id',
+                    foreignField: 'code',
+                    as: 'conversation',
+                  },
                 },
-              },
-            ])
-            .then((response) => {
-              if (response) {
-                done(response)
-              }
-            })
-            .catch(function (err) {
-              console.log(err)
-            })
+              ])
+              .then((response) => {
+                if (response) {
+                  done(response)
+                }
+              })
+              .catch(function (err) {
+                console.log(err)
+              })
+          },
+        ],
+        function (result) {
+          try {
+            return res.status(200).json(result)
+          } catch (error) {}
         },
-        
-      ], function(result){
-        try {
-          return res.status(200).json(result)
-        } catch (error) {
-          
-        }
-      })
+      )
     } catch (error) {
       console.log(error)
     }
@@ -567,71 +537,86 @@ module.exports = {
         id, //placeholder = SAT
       } = req.body
 
-      asyncLab.waterfall([
-        function(done){
-          modelDemande.findOne({_id : new ObjectId(id), valide : false}).then(demande=>{
-            if(demande){
-              done(null, demande)
-            }else{
-              return res.status(201).json("Erreur")
+      asyncLab.waterfall(
+        [
+          function (done) {
+            modelDemande
+              .findOne({ _id: new ObjectId(id), valide: false })
+              .then((demande) => {
+                if (demande) {
+                  done(null, demande)
+                } else {
+                  return res.status(201).json('Erreur')
+                }
+              })
+              .catch(function (err) {
+                return res.status(201).json('Erreur')
+              })
+          },
+          function (demande, done) {
+            if (req.file) {
+              const { filename } = req.file
+              modelDemande
+                .findByIdAndUpdate(
+                  id,
+                  {
+                    coordonnes: { latitude, altitude, longitude },
+                    statut,
+                    raison,
+                    codeclient,
+                    sector,
+                    cell,
+                    reference,
+                    sat,
+                    file: filename,
+                    commune,
+                    feedback: 'new',
+                    numero,
+                  },
+                  { new: true },
+                )
+                .then((response) => {
+                  done(response)
+                })
+                .catch(function (err) {
+                  return res.status(201).json('Erreur')
+                })
+            } else {
+              modelDemande
+                .findByIdAndUpdate(
+                  id,
+                  {
+                    coordonnes: { latitude, altitude, longitude },
+                    statut,
+                    raison,
+                    codeclient,
+                    sector,
+                    cell,
+                    reference,
+                    feedback: 'new',
+                    sat,
+                    commune,
+                    numero,
+                  },
+                  { new: true },
+                )
+                .then((response) => {
+                  done(response)
+                })
+                .catch(function (err) {
+                  return res.status(201).json('Erreur')
+                })
             }
-          }).catch(function (err) {
-            return res.status(201).json('Erreur')
-          })
-        },
-        function (demande, done) {
-          if (req.file) {
-            const { filename } = req.file
-            modelDemande
-              .findByIdAndUpdate(id, {
-                coordonnes: { latitude, altitude, longitude },
-                statut,
-                raison,
-                codeclient,
-                sector,
-                cell,
-                reference,
-                sat,
-                file: filename,
-                commune,
-                feedback : "new",
-                numero,
-              }, {new : true})
-              .then((response) => {
-                done(response)
-              })
-              .catch(function (err) {
-                return res.status(201).json('Erreur')
-              })
+          },
+        ],
+        function (result) {
+          if (result) {
+            return res.status(200).json(result)
           } else {
-            modelDemande
-              .findByIdAndUpdate(id, {
-                coordonnes: { latitude, altitude, longitude },
-                statut,
-                raison,
-                codeclient,
-                sector,
-                cell,
-                reference, feedback : "new",
-                sat,
-                commune,
-                numero,
-              }, {new : true})
-              .then((response) => {
-                done(response)
-              })
-              .catch(function (err) {
-                return res.status(201).json('Erreur')
-              })
+            return res.status(201).json('Erreur')
           }
         },
-      ], function(result){
-        if(result){
-          return res.status(200).json(result)
-        }else{
-          return res.status(201).json('Erreur')
-        }
-      })
+      )
 
       // const { filename } = req.file
     } catch (error) {

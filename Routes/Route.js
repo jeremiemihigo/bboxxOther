@@ -54,6 +54,7 @@ const {
 } = require('../Controllers/Reclamation')
 const {
   readPeriodeGroup,
+  demandePourChaquePeriode,
   // searchPaquet,
   chercherUneDemande,
 } = require('../Controllers/Statistique')
@@ -128,6 +129,7 @@ router.get('/demandeAll/:lot/:codeAgent', lectureDemandeMobile)
 router.get('/paquet', protectTech, readPeriodeGroup)
 // router.get('/lot', searchPaquet)
 router.get('/periodeActive', ReadPeriodeActive)
+router.get('/demandePourChaquePeriode', demandePourChaquePeriode)
 router.get('/statZone', StatZone)
 router.delete('/deleteParams', deleteParams)
 

@@ -16,7 +16,6 @@ module.exports = {
             { $set: { double: { codeAgent: agentCo, valeur: doublon }, feedback:"chat" } },
             { new: true },
           )
-
           .then((response) => {
             if (response) {
               return res.status(200).json(idDemande)

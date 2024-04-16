@@ -4,6 +4,36 @@ const asyncLab = require('async')
 const modelPeriode = require("../Models/Periode")
 
 module.exports = {
+  demandePourChaquePeriode: (req, res) => {
+    try {
+      modelDemande
+        .aggregate([
+          {
+            $lookup: {
+              from: 'reponses',
+              localField: 'idDemande',
+              foreignField: 'idDemande',
+              as: 'reponse',
+            },
+          },
+          { $unwind: '$reponse' },
+          {
+            $group: {
+              _id: '$lot',
+              total: { $sum: 1 },
+            },
+          },
+          {
+            $sort : {_id : -1}
+          }
+        ])
+        .then((result) => {
+          return res.status(200).json(result.reverse())
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  },
   readPeriodeGroup: (req, res) => {
     try {
       const { codeAgent } = req.user
@@ -15,21 +45,8 @@ module.exports = {
             }
           }).catch(function(err){console.log(err)})
         },
-        function(periode, done){
-          modelDemande
-          .aggregate([{ $group: { _id: '$lot' } }])
-          .then((response) => {
-            if (response) {
-              let table = []
-              for (let i = 0; i < response.length; i++) {
-                
-                table.push(response[i]._id)
-              }
-              done(null, periode, table)
-            }
-          })
-        },
-        function (periode, lot, done) {
+        
+        function (periode, done) {
           modelDemande
             .aggregate([
               {
@@ -62,14 +79,15 @@ module.exports = {
             })
         },
         function (periode, reponse, done) {
+        
           let table = []
           table.push({
             _id : periode.periode,
             attente : reponse.filter(
-              (x) => x.reponse.length < 1 && x.conversation.length === 0,
+              (x) => x.reponse.length < 1 && x.feedback === "new"
             ),
             nConforme : reponse.filter(
-              (x) =>  x.reponse.length === 0 && x.conversation.length > 0 ,
+              (x) =>  x.reponse.length < 1 && x.feedback === "chat" ,
             ),
             valide :reponse.filter(
               (x) => x.reponse.length > 0,

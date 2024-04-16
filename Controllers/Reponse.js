@@ -593,7 +593,9 @@ module.exports = {
                 text: demande[i].lot, // La periode
                 codeAgent: demande[i].reponse.codeAgent,
                 dateSave: demande[i].reponse.dateSave,
-  
+                createdAt : demande[i].reponse.createdAt,
+                updatedAt : demande[i].reponse.updatedAt,
+
                 agentSave :{nom : demande[i].agentadmin.nom },
                 demandeur : {
                   nom : demande[i].agent.nom,
