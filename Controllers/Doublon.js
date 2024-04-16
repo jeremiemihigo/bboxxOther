@@ -13,7 +13,7 @@ module.exports = {
         modelDemande
           .findOneAndUpdate(
             { idDemande },
-            { $set: { double: { codeAgent: agentCo, valeur: doublon } } },
+            { $set: { double: { codeAgent: agentCo, valeur: doublon, feedback:"chat" } } },
             { new: true },
           )
 
