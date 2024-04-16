@@ -7,20 +7,20 @@ module.exports = {
   //Corbeille done
   AddAdminAgent: (req, res) => {
     try {
-      const { nom, fonction, telephone, code } = req.body
-      const  codeAgent = "j.mihigo" //Agent admin qui fait l'operation
-      if (!nom || !fonction || !telephone || !code) {
+      const { nom,codeAgent, code, departement } = req.body
+       //Agent admin qui fait l'operation
+      if (!nom || !code || !departement) {
         return res.status(404).json('Veuillez renseigner les champs')
       }
       asyncLab.waterfall(
         [
           function (done) {
-            ModelAgentAdmin.findOne({ $or: [{ codeAgent : code }, { telephone }] })
+            ModelAgentAdmin.findOne({ codeAgent: code })
               .then((agent) => {
                 if (agent) {
                   return res
                     .status(404)
-                    .json('un agent utilise ce numero de telephone')
+                    .json('ce code existe deja')
                 } else {
                   done(null, agent)
                 }
@@ -32,11 +32,11 @@ module.exports = {
           function (agent, done) {
             ModelAgentAdmin.create({
               nom,
-              fonction,
-              password : "1234",
-              telephone,
-              codeAgent : code,
-              id : new Date()
+              password: '1234',
+              departement,
+             
+              codeAgent: code,
+              id: new Date(),
             })
               .then((result) => {
                 if (result) {
@@ -44,7 +44,7 @@ module.exports = {
                 }
               })
               .catch(function (err) {
-                console.log(err)
+              
                 if (err) {
                   return res.status(404).json('Error')
                 }
@@ -53,7 +53,7 @@ module.exports = {
           function (result, done) {
             ModelAgentCorbeille.create({
               codeAgent: result.codeAgent,
-              doBy : codeAgent,
+              doBy: codeAgent,
               operation: 'ajouter',
             })
               .then((response) => {
@@ -81,7 +81,7 @@ module.exports = {
   //Corbeille done
   ResetPasswords: (req, res) => {
     const { id } = req.body
-   
+
     const { codeAgent } = req.user //Agent admin qui fait l'operation
     if (!id) {
       return res.status(201).json('Error')
@@ -90,7 +90,8 @@ module.exports = {
       [
         function (done) {
           bcrypt.hash('1234', 10, function (err, bcrypePassword) {
-            ModelAgentAdmin.findByIdAndUpdate(id,
+            ModelAgentAdmin.findByIdAndUpdate(
+              id,
               { $set: { password: bcrypePassword, first: true } },
               { new: true },
             )
@@ -131,7 +132,25 @@ module.exports = {
   },
   ReadAgentAdmin: (req, res) => {
     try {
-      ModelAgentAdmin.find({}, { password: 0 })
+      ModelAgentAdmin.aggregate([
+        {
+          $lookup: {
+            from: 'permissions',
+            localField: 'taches',
+            foreignField: 'id',
+            as: 'tache',
+          },
+        },
+        {
+          $lookup: {
+            from: 'departements',
+            localField: 'departement',
+            foreignField: 'idDepartement',
+            as: 'departements',
+          },
+        },
+      ])
+
         .then((agents) => {
           if (agents.length > 0) {
             return res.status(200).json(agents.reverse())
@@ -146,17 +165,18 @@ module.exports = {
       console.log(error)
     }
   },
-  BloquerAgentAdmin:(req, res)=>{
+  BloquerAgentAdmin: (req, res) => {
     try {
       const { id } = req.body
       const { codeAgent } = req.user //Agent admin qui fait l'operation
-      if(!codeAgent || !id){
-        return res.status(404).json("Erreur")
+      if (!codeAgent || !id) {
+        return res.status(404).json('Erreur')
       }
       asyncLab.waterfall(
         [
           function (done) {
-            ModelAgentAdmin.findByIdAndUpdate(id,
+            ModelAgentAdmin.findByIdAndUpdate(
+              id,
               { $set: { active: false, first: true } },
               { new: true },
             )
@@ -173,8 +193,8 @@ module.exports = {
           },
           function (response, done) {
             ModelAgentCorbeille.create({
-              codeAgent : response._id,
-              doBy : codeAgent,
+              codeAgent: response._id,
+              doBy: codeAgent,
               operation: 'bloquer',
             })
               .then((response) => {
@@ -193,6 +213,26 @@ module.exports = {
           }
         },
       )
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  AddTache: (req, res) => {
+    try {
+      const { codeAgent, tache } = req.body
+      ModelAgentAdmin.findOneAndUpdate(
+        { codeAgent },
+        { $addToSet: { taches: tache } },
+        { new: true },
+      )
+        .then((result) => {
+          if (result) {
+            return res.status(200).json(result)
+          }
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
     } catch (error) {
       console.log(error)
     }

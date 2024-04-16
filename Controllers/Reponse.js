@@ -135,36 +135,27 @@ module.exports = {
                     doublon[0].demande.codeAgent === demande[0].agent.codeAgent
                   ) {
                     let double = {
-                      message : `Vous avez visité le client ${
-                        doublon[0]?.codeclient
-                      } le ${dayjs(demande[0].createdAt).format('DD/MM/YYYY')}
-                      pour plus de confirmations, veuillez vérifier dans vos visites conformes
-                      `,
-                      idDemande : demande[0].idDemande,
-                      _idDemande : demande[0]._id,
-                      agentCo : codeAgent
+                      idDemande: demande[0].idDemande,
+                      doublon : doublon[0].demande.idDemande,
+                      agentCo: codeAgent,
                     }
                     req.recherche = double
                     next()
                   } else {
                     let double = {
-                      codeclient : doublon[0].codeclient,
-                      precedent : doublon[0].demande.idDemande,
-                      present : demande[0].idDemande,
-                      agentCo : codeAgent,
-                      message : `Ce client a été visiter le ${dayjs(
+                      codeclient: doublon[0].codeclient,
+                      precedent: doublon[0].demande.idDemande,
+                      present: demande[0].idDemande,
+                      agentCo: codeAgent,
+                      message: `visite effectuée par ${dayjs(
                         doublon[0]?.demande.createdAt,
                       ).format('DD/MM/YYYY')} par ${
                         doublon[0].agent.nom
-                      } code : ${doublon[0].agent.codeAgent} à ${dayjs(
-                        doublon[0]?.createdAt,
-                      ).format('hh:mm:ss')} `,
-                      _idDemande : demande[0]._id
+                      } code : ${doublon[0].agent.codeAgent}`,
+                      _idDemande: demande[0]._id,
                     }
-                    console.log(double)
                     req.recherche = double
                     next()
-                    
                   }
                 } else {
                   done(null, periode, demande, agent)

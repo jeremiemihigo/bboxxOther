@@ -6,16 +6,12 @@ const schema = new mongoose.Schema(
   {
     nom: { type: String, required: true, unique:true, trim:true },
     codeAgent: { type: String, required: true, unique: true, trim: true },
-    fonction: {
-      type: String,
-      required: true,
-      enum: ["admin", "co", "superUser"],
-    },
     password: { type: String, required: true, default: 1234 },
-    telephone: { type: String, required: true, unique:true, trim:true },
     active: { type: Boolean, required: true, default: true },
     id: { type: Date, required: true, unique:true },
     first : {type:Boolean, required:true, default : true},
+    taches : {type:Array, required:false},
+    departement : {type:String, required:true}
   },
   { timestamps: true }
 );
