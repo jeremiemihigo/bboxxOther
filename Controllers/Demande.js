@@ -25,6 +25,7 @@ module.exports = {
         longitude, // si la photo est prise dans l'appli ce champs est obligatoire sinon il n'est pas obligatoire
         statut,
         raison,
+        // file,
         // N'oublies pas de supprimer la propriété "adresse" car elle n'existe plus,
         sector, //placeholder = Sector/constituency
         cell, //placeholder = Cell/Ward
@@ -123,6 +124,7 @@ module.exports = {
                 idShop: agent.idShop,
                 sat,
                 file: filename,
+                // file,
                 commune,
                 numero,
               })
