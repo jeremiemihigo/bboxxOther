@@ -1,0 +1,396 @@
+[{
+  "_id": {
+    "$oid": "65f7e9dcf8d18d7eaafd6281"
+  },
+  "id": {
+    "$date": "2024-03-18T07:14:36.891Z"
+  },
+  "shop": "Walungu",
+  "adresse": "",
+  "idShop": "sh1",
+  "idZone": "MWL2",
+  "createdAt": {
+    "$date": "2024-03-18T07:14:36.896Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-08T14:30:25.022Z"
+  },
+  "__v": 0,
+  "tickets": [
+    "david",
+    "Ishara Dieumerci",
+    "joyce",
+    "michelle",
+    "luc"
+  ]
+},
+{
+  "_id": {
+    "$oid": "65f7ea1ff8d18d7eaafd628b"
+  },
+  "id": {
+    "$date": "2024-03-18T07:15:43.059Z"
+  },
+  "shop": "Bunia Shop",
+  "adresse": "",
+  "idShop": "sh2",
+  "idZone": "7778",
+  "createdAt": {
+    "$date": "2024-03-18T07:15:43.059Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:15:43.059Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7ed51f8d18d7eaafd65ac"
+  },
+  "id": {
+    "$date": "2024-03-18T07:29:21.461Z"
+  },
+  "shop": "Beni",
+  "adresse": "",
+  "idShop": "sh3",
+  "idZone": "V3L4",
+  "createdAt": {
+    "$date": "2024-03-18T07:29:21.464Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-08T14:47:20.904Z"
+  },
+  "__v": 0,
+  "tickets": [
+    "Ishara Dieumerci",
+    "luc",
+    "b.muzusa"
+  ]
+},
+{
+  "_id": {
+    "$oid": "65f7eefdf8d18d7eaafd673f"
+  },
+  "id": {
+    "$date": "2024-03-18T07:36:29.372Z"
+  },
+  "shop": "Kavumu",
+  "adresse": "",
+  "idZone": "MWL2",
+  "idShop": "sh4",
+  "createdAt": {
+    "$date": "2024-03-18T07:36:29.374Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:36:29.374Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7ef14f8d18d7eaafd6746"
+  },
+  "id": {
+    "$date": "2024-03-18T07:36:52.105Z"
+  },
+  "shop": "Uvira",
+  "adresse": "",
+  "idShop": "sh5",
+  "idZone": "MWL2",
+  "createdAt": {
+    "$date": "2024-03-18T07:36:52.106Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:36:52.106Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7ef2bf8d18d7eaafd674a"
+  },
+  "id": {
+    "$date": "2024-03-18T07:37:15.158Z"
+  },
+  "shop": "Baraka",
+  "adresse": "",
+  "idShop": "sh6",
+  "idZone": "MWL2",
+  "createdAt": {
+    "$date": "2024-03-18T07:37:15.158Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-08T14:35:45.413Z"
+  },
+  "__v": 0,
+  "tickets": [
+    "Ishara Dieumerci",
+    "j.jeremiemihigo"
+  ]
+},
+{
+  "_id": {
+    "$oid": "65f7ef3af8d18d7eaafd6751"
+  },
+  "id": {
+    "$date": "2024-03-18T07:37:30.479Z"
+  },
+  "shop": "Luvungi",
+  "adresse": "",
+  "idShop": "sh7",
+  "idZone": "MWL2",
+  "createdAt": {
+    "$date": "2024-03-18T07:37:30.480Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:37:30.480Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7ef49f8d18d7eaafd6757"
+  },
+  "id": {
+    "$date": "2024-03-18T07:37:45.229Z"
+  },
+  "shop": "Kalemie",
+  "adresse": "",
+  "idShop": "sh8",
+  "idZone": "MWL2",
+  "createdAt": {
+    "$date": "2024-03-18T07:37:45.229Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:37:45.229Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f018f8d18d7eaafd677e"
+  },
+  "id": {
+    "$date": "2024-03-18T07:41:12.595Z"
+  },
+  "shop": "Kisangani Shop",
+  "adresse": "",
+  "idShop": "sh9",
+  "idZone": "CGFG",
+  "createdAt": {
+    "$date": "2024-03-18T07:41:12.599Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:41:12.599Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f131f8d18d7eaafd67c3"
+  },
+  "id": {
+    "$date": "2024-03-18T07:45:53.336Z"
+  },
+  "shop": "Goma",
+  "adresse": "",
+  "idShop": "sh10",
+  "idZone": "V3L4",
+  "createdAt": {
+    "$date": "2024-03-18T07:45:53.339Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:45:53.339Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f148f8d18d7eaafd67d4"
+  },
+  "id": {
+    "$date": "2024-03-18T07:46:16.367Z"
+  },
+  "shop": "Butembo",
+  "adresse": "",
+  "idShop": "sh11",
+  "idZone": "V3L4",
+  "createdAt": {
+    "$date": "2024-03-18T07:46:16.368Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:46:16.368Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f15df8d18d7eaafd67f3"
+  },
+  "id": {
+    "$date": "2024-03-18T07:46:37.760Z"
+  },
+  "shop": "Minova",
+  "adresse": "",
+  "idShop": "sh12",
+  "idZone": "V3L4",
+  "createdAt": {
+    "$date": "2024-03-18T07:46:37.760Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:46:37.760Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f163f8d18d7eaafd680d"
+  },
+  "id": {
+    "$date": "2024-03-18T07:46:43.551Z"
+  },
+  "shop": "Rubaya",
+  "idShop": "sh13",
+  "adresse": "",
+  "idZone": "V3L4",
+  "createdAt": {
+    "$date": "2024-03-18T07:46:43.551Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:46:43.551Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f180f8d18d7eaafd683e"
+  },
+  "id": {
+    "$date": "2024-03-18T07:47:12.465Z"
+  },
+  "shop": "Kinshasa Ngaliema",
+  "adresse": "",
+  "idShop": "sh14",
+  "idZone": "LIEI",
+  "createdAt": {
+    "$date": "2024-03-18T07:47:12.468Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:47:12.468Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f194f8d18d7eaafd685f"
+  },
+  "id": {
+    "$date": "2024-03-18T07:47:32.350Z"
+  },
+  "shop": "Kinshasa Tshangu",
+  "adresse": "",
+  "idZone": "LIEI",
+  "idShop": "sh15",
+  "createdAt": {
+    "$date": "2024-03-18T07:47:32.351Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:47:32.351Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f1bbf8d18d7eaafd6881"
+  },
+  "id": {
+    "$date": "2024-03-18T07:48:11.122Z"
+  },
+  "shop": "Kolwezi",
+  "idShop": "sh16",
+  "adresse": "",
+  "idZone": "3VYK",
+  "createdAt": {
+    "$date": "2024-03-18T07:48:11.125Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:48:11.125Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f1bef8d18d7eaafd6888"
+  },
+  "id": {
+    "$date": "2024-03-18T07:48:14.380Z"
+  },
+  "shop": "Lubumbashi",
+  "idShop": "sh17",
+  "adresse": "",
+  "idZone": "3VYK",
+  "createdAt": {
+    "$date": "2024-03-18T07:48:14.381Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:48:14.381Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f7f1d7f8d18d7eaafd68b1"
+  },
+  "id": {
+    "$date": "2024-03-18T07:48:39.366Z"
+  },
+  "shop": "Ariwara",
+  "idShop": "sh18",
+  "adresse": "",
+  "idZone": "7778",
+  "createdAt": {
+    "$date": "2024-03-18T07:48:39.367Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-18T07:48:39.367Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65f936f9c14e14f931dd995b"
+  },
+  "id": {
+    "$date": "2024-03-19T06:55:53.207Z"
+  },
+  "shop": "Bukavu Shop",
+  "adresse": "",
+  "idZone": "MWL2",
+  "idShop": "sh19",
+  "createdAt": {
+    "$date": "2024-03-19T06:55:53.209Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-19T06:55:53.209Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66028de3986d32968664ce7f"
+  },
+  "id": {
+    "$date": "2024-03-26T08:57:07.318Z"
+  },
+  "shop": "Durba",
+  "adresse": "",
+  "idZone": "7778",
+  "idShop": "sh20",
+  "createdAt": {
+    "$date": "2024-03-26T08:57:07.332Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-26T08:57:07.332Z"
+  },
+  "__v": 0
+}]

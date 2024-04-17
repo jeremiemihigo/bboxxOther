@@ -1,0 +1,102 @@
+[{
+  "_id": {
+    "$oid": "65ae5f21d83c4647d1dbf646"
+  },
+  "idZone": "MWL2",
+  "id": {
+    "$date": "2024-01-22T12:27:13.944Z"
+  },
+  "denomination": "South Kivu",
+  "createdAt": {
+    "$date": "2024-01-22T12:27:13.945Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-22T12:27:13.945Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65b19bb6e6b660e13f186ee3"
+  },
+  "idZone": "V3L4",
+  "id": {
+    "$date": "2024-01-24T23:22:30.706Z"
+  },
+  "denomination": "North Kivu",
+  "createdAt": {
+    "$date": "2024-01-24T23:22:30.712Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-24T23:22:30.712Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65b19bcae6b660e13f186ef2"
+  },
+  "idZone": "3VYK",
+  "id": {
+    "$date": "2024-01-24T23:22:50.606Z"
+  },
+  "denomination": "Katanga",
+  "createdAt": {
+    "$date": "2024-01-24T23:22:50.607Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-24T23:22:50.607Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65b19bd8e6b660e13f186f01"
+  },
+  "idZone": "CGFG",
+  "id": {
+    "$date": "2024-01-24T23:23:04.687Z"
+  },
+  "denomination": "Tshopo",
+  "createdAt": {
+    "$date": "2024-01-24T23:23:04.688Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-24T23:23:04.688Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65d5ba23f9b11179728c0436"
+  },
+  "idZone": "7778",
+  "id": {
+    "$date": "2024-02-21T08:53:55.338Z"
+  },
+  "denomination": "Ituri",
+  "createdAt": {
+    "$date": "2024-02-21T08:53:55.342Z"
+  },
+  "updatedAt": {
+    "$date": "2024-02-21T08:53:55.342Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65d5ba42f9b11179728c0445"
+  },
+  "idZone": "LIEI",
+  "id": {
+    "$date": "2024-02-21T08:54:26.442Z"
+  },
+  "denomination": "Kinshasa",
+  "createdAt": {
+    "$date": "2024-02-21T08:54:26.442Z"
+  },
+  "updatedAt": {
+    "$date": "2024-02-21T08:54:26.442Z"
+  },
+  "__v": 0
+}]
