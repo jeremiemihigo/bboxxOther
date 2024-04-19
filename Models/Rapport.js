@@ -3,7 +3,7 @@ const modelDemande = require('./Demande')
 
 const schema = new mongoose.Schema(
   {
-    codeclient: { type: String, required: true, uppercase: true }, //BDRC
+    codeclient: { type: String, required: true, trim:true, max:12, min:12, uppercase: true }, //BDRC
     codeCu: { type: String, required: true },
     clientStatut: { type: String, required: true },
     PayementStatut: { type: String, required: true },

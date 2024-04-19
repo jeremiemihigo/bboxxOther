@@ -43,7 +43,6 @@ const {
   OneReponse,
   updateReponse,
   ReponseDemandeLot,
-  reponseChangeStatus,
 } = require('../Controllers/Reponse')
 const { Rapport, StatZone } = require('../Controllers/Rapport')
 const {
@@ -195,5 +194,4 @@ router.get('/permission', ReadPermission)
 router.get('/departement', ReadDepartement)
 router.put("/addTache", AddTache)
 
-router.get("/changeStatus", reponseChangeStatus)
 module.exports = router

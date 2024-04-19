@@ -66,17 +66,7 @@ module.exports = {
   },
   ReadRaison: (req, res) => {
     try {
-      modelRaison
-        .aggregate([
-          {
-            $lookup: {
-              from: 'demandes',
-              localField: 'raison',
-              foreignField: 'raison',
-              as: 'demande',
-            },
-          },
-        ])
+      modelRaison.find({}).lean()
         .then((raison) => {
           if (raison) {
             return res.status(200).json(raison)

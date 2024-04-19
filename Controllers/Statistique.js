@@ -2,24 +2,16 @@ const modelDemande = require('../Models/Demande')
 const _ = require('lodash')
 const asyncLab = require('async')
 const modelPeriode = require("../Models/Periode")
+const Report = require("../Models/Rapport")
 
 module.exports = {
   demandePourChaquePeriode: (req, res) => {
     try {
-      modelDemande
+      Report
         .aggregate([
           {
-            $lookup: {
-              from: 'reponses',
-              localField: 'idDemande',
-              foreignField: 'idDemande',
-              as: 'reponse',
-            },
-          },
-          { $unwind: '$reponse' },
-          {
             $group: {
-              _id: '$lot',
+              _id: '$demande.lot',
               total: { $sum: 1 },
             },
           },
